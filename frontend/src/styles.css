@@ -108,11 +108,47 @@ td > code {
   background: var(--code-bar);
 }
 
+.code-figure__path-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
 .code-figure__path {
   color: #b9c6de;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
   word-break: break-all;
+}
+
+.code-figure__copy-path {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid #2f3d5c;
+  border-radius: 0.35rem;
+  background: #141f33;
+  color: #a5b4cd;
+  font-size: 0.68rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+}
+
+.code-figure__copy-path:hover {
+  background: #22304d;
+  border-color: #3e517a;
+  color: #f1f5f9;
+}
+
+.code-figure__icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
 }
 
 .code-figure__meta {

@@ -115,7 +115,28 @@ export class StatusBadge {
   template: `
     <figure class="code-figure">
       <figcaption class="code-figure__bar">
-        <span class="code-figure__path">{{ path() }}</span>
+        <div class="code-figure__path-group">
+          <span class="code-figure__path">{{ path() }}</span>
+          <button
+            type="button"
+            class="code-figure__copy-path"
+            [attr.aria-label]="'Copy file path ' + path() + ' to clipboard'"
+            (click)="copyPath()"
+          >
+            @if (pathCopied()) {
+              <svg class="code-figure__icon text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              <span>Path copied!</span>
+            } @else {
+              <svg class="code-figure__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy path</span>
+            }
+          </button>
+        </div>
         <span class="code-figure__meta">
           @if (note()) {
             <span class="code-figure__note">{{ note() }}</span>
@@ -124,10 +145,10 @@ export class StatusBadge {
           <button
             type="button"
             class="code-figure__copy"
-            [attr.aria-label]="'Copy ' + path() + ' to the clipboard'"
+            [attr.aria-label]="'Copy code from ' + path() + ' to the clipboard'"
             (click)="copy()"
           >
-            {{ copied() ? 'Copied' : 'Copy' }}
+            {{ copied() ? 'Copied' : 'Copy code' }}
           </button>
         </span>
       </figcaption>
@@ -141,11 +162,22 @@ export class SourceCode {
   readonly note = input<string>();
 
   protected readonly copied = signal(false);
+  protected readonly pathCopied = signal(false);
   protected readonly body = computed(() => readSource(this.path()));
   protected readonly language = computed(() => languageForPath(this.path()));
   protected readonly html = computed(() =>
     highlight(this.body(), this.language()),
   );
+
+  protected async copyPath(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.path());
+      this.pathCopied.set(true);
+      setTimeout(() => this.pathCopied.set(false), 1500);
+    } catch {
+      // Clipboard permission denied — path is selectable either way.
+    }
+  }
 
   protected async copy(): Promise<void> {
     try {
@@ -164,10 +196,39 @@ export class SourceCode {
   template: `
     <figure class="code-figure code-figure--quoted">
       <figcaption class="code-figure__bar">
-        <span class="code-figure__path">{{ caption() }}</span>
+        <div class="code-figure__path-group">
+          <span class="code-figure__path">{{ caption() }}</span>
+          <button
+            type="button"
+            class="code-figure__copy-path"
+            [attr.aria-label]="'Copy ' + caption() + ' to clipboard'"
+            (click)="copyCaption()"
+          >
+            @if (captionCopied()) {
+              <svg class="code-figure__icon text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              <span>Copied!</span>
+            } @else {
+              <svg class="code-figure__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy</span>
+            }
+          </button>
+        </div>
         <span class="code-figure__meta">
           <span class="code-figure__badge">not mounted</span>
           <span class="code-figure__lang">{{ language() }}</span>
+          <button
+            type="button"
+            class="code-figure__copy"
+            [attr.aria-label]="'Copy code to clipboard'"
+            (click)="copy()"
+          >
+            {{ copied() ? 'Copied' : 'Copy code' }}
+          </button>
         </span>
       </figcaption>
       <pre class="code-figure__pre"><code [innerHTML]="html()"></code></pre>
@@ -179,7 +240,29 @@ export class DocSample {
   readonly code = input.required<string>();
   readonly language = input<CodeLanguage>('typescript');
 
+  protected readonly copied = signal(false);
+  protected readonly captionCopied = signal(false);
   protected readonly html = computed(() =>
     highlight(this.code(), this.language()),
   );
+
+  protected async copyCaption(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.caption());
+      this.captionCopied.set(true);
+      setTimeout(() => this.captionCopied.set(false), 1500);
+    } catch {
+      // Clipboard permission denied
+    }
+  }
+
+  protected async copy(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.code());
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 1500);
+    } catch {
+      // Clipboard permission denied
+    }
+  }
 }
