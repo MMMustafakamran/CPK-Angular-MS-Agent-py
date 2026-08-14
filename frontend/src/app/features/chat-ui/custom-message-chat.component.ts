@@ -1,4 +1,4 @@
-// chat ui : replace an assistant message component
+// chat ui : replace an assistant message component start
 /**
  * The second `SupportChatComponent` from "Replace an assistant message",
  * verbatim except for the class name and selector — the guide gives two
@@ -25,3 +25,4 @@ export class CustomMessageChatComponent {
   protected readonly assistantMessageComponent =
     CustomAssistantMessageComponent;
 }
+// chat ui : replace an assistant message component end

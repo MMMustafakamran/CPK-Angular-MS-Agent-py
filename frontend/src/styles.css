@@ -4,6 +4,7 @@
    without any other CSS.
    https://docs.copilotkit.ai/angular/ms-agent-python/quickstart */
 
+/* quickstart : import the styles start */
 @import '@copilotkit/angular/styles.css';
 
 /* ------------------------------------------------------------------ */
@@ -246,7 +247,7 @@ td > code {
   font-weight: 700;
 }
 
-/* chat ui : scope css changes */
+/* chat ui : scope css changes start */
 .support-chat .copilotKitUserMessage {
   color: white;
   background: #2563eb;
@@ -259,8 +260,9 @@ td > code {
   background: #eff6ff;
   border-radius: 0.75rem;
 }
+/* chat ui : scope css changes end */
 
-/* a2ui : style rendered components */
+/* a2ui : style rendered components start */
 .a2ui-row {
   display: flex;
   flex-wrap: wrap;
@@ -329,3 +331,4 @@ td > code {
   background: #fee2e2;
   color: #991b1b;
 }
+/* a2ui : style rendered components end */

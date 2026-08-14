@@ -12,7 +12,7 @@ import { z } from 'zod';
 
 import { routes } from './app.routes';
 
-// frontend tools : open generative ui host function
+// frontend tools : open generative ui host function start
 const setDashboardFilter: SandboxFunction<{ filter: string }> = {
   name: 'setDashboardFilter',
   description: 'Set the active dashboard filter',
@@ -22,6 +22,7 @@ const setDashboardFilter: SandboxFunction<{ filter: string }> = {
     return { applied: filter };
   },
 };
+// frontend tools : open generative ui host function end
 
 
 /**
@@ -46,14 +47,15 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideClientHydration(),
-    // quickstart : connect to copilot runtime
+    // quickstart : connect to copilot runtime start
     provideCopilotKit({
       runtimeUrl: 'http://localhost:8201/api/copilotkit',
-      // a2ui : recover incomplete streams
+      // a2ui : recover incomplete streams start
       a2ui: {
         recovery: { showAfterMs: 2_000, showAfterAttempts: 2 },
       },
-      // frontend tools : open generative ui
+      // a2ui : recover incomplete streams end
+      // frontend tools : open generative ui start
       openGenerativeUI: {
         // `sandboxFunctions` is typed `SandboxFunction[]`, i.e.
         // `SandboxFunction<Record<string, unknown>>[]`, so the guide's
@@ -62,6 +64,8 @@ export const appConfig: ApplicationConfig = {
         // equivalent `component` variance problem. See README known issues.
         sandboxFunctions: [setDashboardFilter as unknown as SandboxFunction],
       },
+      // frontend tools : open generative ui end
     }),
+    // quickstart : connect to copilot runtime end
   ],
 };

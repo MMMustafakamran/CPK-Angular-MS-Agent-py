@@ -1,4 +1,4 @@
-// chat ui : use a popup or sidebar
+// chat ui : use a popup or sidebar start
 /**
  * "Use a popup or sidebar", verbatim except for the class name and selector
  * (the guide mounts it as `AppComponent` / `app-root`).
@@ -31,3 +31,4 @@ export class PopupSidebarComponent {
   readonly popupOpen = signal(false);
   readonly sidebarOpen = signal(false);
 }
+// chat ui : use a popup or sidebar end

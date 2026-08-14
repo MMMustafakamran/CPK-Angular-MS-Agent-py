@@ -1,4 +1,4 @@
-// shared state : shared state chat
+// shared state : shared state chat start
 /**
  * Mounts the guide's three surfaces against one chat: the read/write state
  * panel, the accessor-based context, and the directive-based context.
@@ -34,3 +34,4 @@ import { WorkspaceComponent } from './workspace.component';
   `,
 })
 export class SharedStateChatComponent {}
+// shared state : shared state chat end

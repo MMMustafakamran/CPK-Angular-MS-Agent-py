@@ -1,4 +1,4 @@
-// threads : threads drawer and chat
+// threads : threads drawer and chat start
 /**
  * The drawer-plus-chat sample, verbatim. Both sit under one
  * `provideCopilotChatConfiguration`, which is what makes selection and
@@ -23,3 +23,4 @@ import {
   `,
 })
 export class ConversationsComponent {}
+// threads : threads drawer and chat end

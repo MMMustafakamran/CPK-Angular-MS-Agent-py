@@ -1,4 +1,4 @@
-// shared state : read and write agent state
+// shared state : read and write agent state start
 /**
  * "Read agent state", verbatim. Reads through `store().state()` so Angular
  * tracks changes; writes through the plain AG-UI agent at `store().agent`.
@@ -48,3 +48,4 @@ export class WorkspaceComponent {
     agent.setState({ ...current, priority });
   }
 }
+// shared state : read and write agent state end

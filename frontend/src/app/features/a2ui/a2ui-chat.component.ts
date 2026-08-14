@@ -1,4 +1,4 @@
-// a2ui : a2ui chat
+// a2ui : a2ui chat start
 /**
  * A2UI needs no component-level wiring: the runtime applies A2UIMiddleware
  * (`a2ui: {}` in frontend/server.ts) and, per the guide, "on the frontend, the
@@ -22,3 +22,4 @@ import { CopilotChat } from '@copilotkit/angular';
   `,
 })
 export class A2uiChatComponent {}
+// a2ui : a2ui chat end

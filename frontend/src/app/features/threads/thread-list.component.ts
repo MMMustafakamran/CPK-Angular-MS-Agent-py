@@ -1,4 +1,4 @@
-// threads : custom thread list
+// threads : custom thread list start
 /**
  * "For a custom thread list, use injectThreads", verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/threads-memory-attachments-headless
@@ -30,14 +30,16 @@ import { injectThreads } from '@copilotkit/angular';
   `,
 })
 export class ThreadListComponent {
-  // threads : inject threads
+  // threads : inject threads start
   readonly threads = injectThreads({
     agentId: 'support',
     limit: 20,
   });
+  // threads : inject threads end
 
   protected select(threadId: string): void {
     // Store this id and bind it to CopilotChat's threadId input.
     console.log(threadId);
   }
 }
+// threads : custom thread list end

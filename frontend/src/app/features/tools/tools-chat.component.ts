@@ -1,4 +1,4 @@
-// frontend tools : register tools and renderers
+// frontend tools : register tools and renderers start
 /**
  * Mounts both halves of the guide's frontend-tools section against one chat.
  *
@@ -51,14 +51,17 @@ export class ToolsChatComponent {
   protected readonly background = signal(DEFAULT_BACKGROUND);
 
   constructor() {
-    // frontend tools : render a tool result (server tool)
+    // frontend tools : render a tool result start
     registerRenderToolCall({
       name: 'getWeather',
       args: z.object({ city: z.string() }),
       component: WeatherCardComponent,
     });
+    // frontend tools : render a tool result end
 
-    // frontend tools : register a browser tool
+    // frontend tools : register a browser tool start
     registerFrontendTool(createBackgroundTool(this.background));
+    // frontend tools : register a browser tool end
   }
 }
+// frontend tools : register tools and renderers end

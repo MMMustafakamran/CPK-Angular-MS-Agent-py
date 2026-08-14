@@ -1,4 +1,4 @@
-// shared state : bind context in a template
+// shared state : bind context in a template start
 /**
  * "Bind context in a template", verbatim. The directive registers on first
  * render, so it must not be rendered before the context is complete.
@@ -20,3 +20,4 @@ export class SelectionContextComponent {
     value: this.selectedId(),
   }));
 }
+// shared state : bind context in a template end

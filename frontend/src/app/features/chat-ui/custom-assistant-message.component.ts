@@ -1,4 +1,4 @@
-// chat ui : replace an assistant message
+// chat ui : replace an assistant message start
 /**
  * "Replace an assistant message", verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/chat-ui
@@ -25,3 +25,4 @@ type AssistantMessage = {
 export class CustomAssistantMessageComponent {
   readonly message = input.required<AssistantMessage>();
 }
+// chat ui : replace an assistant message end

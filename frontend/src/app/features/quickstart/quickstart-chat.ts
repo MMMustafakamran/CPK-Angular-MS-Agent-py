@@ -1,4 +1,4 @@
-// quickstart : add the chat ui
+// quickstart : add the chat ui start
 import { Component } from '@angular/core';
 import { CopilotChat } from '@copilotkit/angular';
 
@@ -12,3 +12,4 @@ import { CopilotChat } from '@copilotkit/angular';
   `,
 })
 export class QuickstartChat {}
+// quickstart : add the chat ui end

@@ -1,4 +1,4 @@
-// human in the loop : hitl chat
+// human in the loop : hitl chat start
 /**
  * Puts the guide's two human-in-the-loop paths side by side: the decision tool
  * (registered by ApprovalToolsService, rendered inside the chat's tool-call
@@ -31,3 +31,4 @@ import { InterruptPanelComponent } from './interrupt-panel.component';
 export class HitlChatComponent {
   private readonly approvalTools = inject(ApprovalToolsService);
 }
+// human in the loop : hitl chat end

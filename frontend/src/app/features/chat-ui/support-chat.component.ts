@@ -1,4 +1,4 @@
-// chat ui : add an inline chat
+// chat ui : add an inline chat start
 /**
  * "Add an inline chat", verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/chat-ui
@@ -29,3 +29,4 @@ import { CopilotChat } from '@copilotkit/angular';
   `,
 })
 export class SupportChatComponent {}
+// chat ui : add an inline chat end

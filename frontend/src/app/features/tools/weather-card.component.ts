@@ -1,4 +1,4 @@
-// frontend tools : render a tool result
+// frontend tools : render a tool result start
 /**
  * "Render a tool result", verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/frontend-tools-generative-ui
@@ -27,3 +27,4 @@ type WeatherArgs = { city: string };
 export class WeatherCardComponent implements ToolRenderer<WeatherArgs> {
   readonly toolCall = input.required<AngularToolCall<WeatherArgs>>();
 }
+// frontend tools : render a tool result end

@@ -1,4 +1,4 @@
-// memory : read and manage memory
+// memory : read and manage memory start
 /**
  * "Configure attachments", verbatim: the guide's `MULTIMODAL_ATTACHMENTS`
  * config bound to the chat exactly as its `media-chat.component.html` snippet
@@ -25,8 +25,9 @@ import { injectMemories } from '@copilotkit/angular';
   `,
 })
 export class MemoryListComponent {
-  // memory : inject memories
+  // memory : inject memories start
   readonly memory = injectMemories();
+  // memory : inject memories end
 
   protected remove(id: string): void {
     this.memory.removeMemory(id).catch(() => undefined);
@@ -41,3 +42,4 @@ export class MemoryListComponent {
       .catch(() => undefined);
   }
 }
+// memory : read and manage memory end

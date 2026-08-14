@@ -1,4 +1,4 @@
-// human in the loop : handle an interrupt
+// human in the loop : handle an interrupt start
 /**
  * "Handle an interrupt", verbatim. The controller is headless, so this panel
  * renders nothing until the backend emits an AG-UI interrupt.
@@ -37,10 +37,11 @@ type ReviewRequest = {
   `,
 })
 export class InterruptPanelComponent {
-  // human in the loop : inject interrupt
+  // human in the loop : inject interrupt start
   protected readonly controller = injectInterrupt<ReviewRequest>({
     agentId: 'default',
   });
+  // human in the loop : inject interrupt end
 
   protected asReviewRequest(value: unknown): ReviewRequest {
     return typeof value === 'object' && value !== null
@@ -56,3 +57,4 @@ export class InterruptPanelComponent {
     this.controller.cancel().catch(() => undefined);
   }
 }
+// human in the loop : handle an interrupt end

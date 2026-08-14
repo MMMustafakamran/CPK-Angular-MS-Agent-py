@@ -29,6 +29,7 @@ import { HttpAgent } from "@ag-ui/client";
 const agentUrl =
   process.env["MICROSOFT_AGENT_FRAMEWORK_URL"] ?? "http://localhost:8200/";
 
+// quickstart : copilot runtime start
 const runtime = new CopilotRuntime({
   agents: {
     // quickstart : connect selected agent backend
@@ -36,13 +37,15 @@ const runtime = new CopilotRuntime({
     // chat ui : support agent
     support: new HttpAgent({ url: agentUrl }),
   },
-  // a2ui : enable a2ui middleware
+  // a2ui : enable a2ui middleware start
   a2ui: {},
+  // a2ui : enable a2ui middleware end
 });
+// quickstart : copilot runtime end
 
 const port = Number(process.env["PORT"] ?? 8201);
 
-// quickstart : create copilot node listener
+// quickstart : create copilot node listener start
 createServer(
   createCopilotNodeListener({
     runtime,
@@ -55,3 +58,4 @@ createServer(
   );
   console.log(`Microsoft Agent Framework agent: ${agentUrl}`);
 });
+// quickstart : create copilot node listener end
