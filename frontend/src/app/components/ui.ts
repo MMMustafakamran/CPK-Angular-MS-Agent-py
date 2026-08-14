@@ -150,20 +150,11 @@ export class StatusBadge {
             <span>Open in IDE</span>
           </a>
         </div>
-        <span class="code-figure__meta">
-          @if (note()) {
+        @if (note()) {
+          <span class="code-figure__meta">
             <span class="code-figure__note">{{ note() }}</span>
-          }
-          <span class="code-figure__lang">{{ language() }}</span>
-          <button
-            type="button"
-            class="code-figure__copy"
-            [attr.aria-label]="'Copy code from ' + path() + ' to the clipboard'"
-            (click)="copy()"
-          >
-            {{ copied() ? 'Copied' : 'Copy code' }}
-          </button>
-        </span>
+          </span>
+        }
       </figcaption>
       <pre class="code-figure__pre"><code [innerHTML]="html()"></code></pre>
     </figure>
@@ -174,7 +165,6 @@ export class SourceCode {
   readonly path = input.required<string>();
   readonly note = input<string>();
 
-  protected readonly copied = signal(false);
   protected readonly pathCopied = signal(false);
   protected readonly body = computed(() => readSource(this.path()));
   protected readonly language = computed(() => languageForPath(this.path()));
@@ -195,16 +185,6 @@ export class SourceCode {
       setTimeout(() => this.pathCopied.set(false), 1500);
     } catch {
       // Clipboard permission denied — path is selectable either way.
-    }
-  }
-
-  protected async copy(): Promise<void> {
-    try {
-      await navigator.clipboard.writeText(this.body());
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 1500);
-    } catch {
-      // Clipboard permission denied — the code is selectable either way.
     }
   }
 }
@@ -239,15 +219,6 @@ export class SourceCode {
         </div>
         <span class="code-figure__meta">
           <span class="code-figure__badge">not mounted</span>
-          <span class="code-figure__lang">{{ language() }}</span>
-          <button
-            type="button"
-            class="code-figure__copy"
-            [attr.aria-label]="'Copy code to clipboard'"
-            (click)="copy()"
-          >
-            {{ copied() ? 'Copied' : 'Copy code' }}
-          </button>
         </span>
       </figcaption>
       <pre class="code-figure__pre"><code [innerHTML]="html()"></code></pre>
@@ -259,7 +230,6 @@ export class DocSample {
   readonly code = input.required<string>();
   readonly language = input<CodeLanguage>('typescript');
 
-  protected readonly copied = signal(false);
   protected readonly captionCopied = signal(false);
   protected readonly html = computed(() =>
     highlight(this.code(), this.language()),
@@ -270,16 +240,6 @@ export class DocSample {
       await navigator.clipboard.writeText(this.caption());
       this.captionCopied.set(true);
       setTimeout(() => this.captionCopied.set(false), 1500);
-    } catch {
-      // Clipboard permission denied
-    }
-  }
-
-  protected async copy(): Promise<void> {
-    try {
-      await navigator.clipboard.writeText(this.code());
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 1500);
     } catch {
       // Clipboard permission denied
     }
