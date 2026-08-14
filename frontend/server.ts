@@ -20,6 +20,7 @@
  * Ports: backend/main.py binds 8200, so the runtime moved to 8201. Override
  * either side with PORT / MICROSOFT_AGENT_FRAMEWORK_URL.
  */
+// quickstart : copilot runtime
 import { createServer } from "node:http";
 import { CopilotRuntime } from "@copilotkit/runtime/v2";
 import { createCopilotNodeListener } from "@copilotkit/runtime/v2/node";
@@ -30,14 +31,18 @@ const agentUrl =
 
 const runtime = new CopilotRuntime({
   agents: {
+    // quickstart : connect selected agent backend
     default: new HttpAgent({ url: agentUrl }),
+    // chat ui : support agent
     support: new HttpAgent({ url: agentUrl }),
   },
+  // a2ui : enable a2ui middleware
   a2ui: {},
 });
 
 const port = Number(process.env["PORT"] ?? 8201);
 
+// quickstart : create copilot node listener
 createServer(
   createCopilotNodeListener({
     runtime,

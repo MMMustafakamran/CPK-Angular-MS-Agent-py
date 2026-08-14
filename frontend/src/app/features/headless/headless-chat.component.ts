@@ -1,9 +1,11 @@
+// headless : build a headless chat
 /**
  * "Build a headless chat", verbatim. No CopilotKit chrome: the transcript and
  * composer are hand-written over `injectAgentStore`, and the run is driven
  * through `CopilotKitCore.runAgent`.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/threads-memory-attachments-headless
  */
+
 import { Component, inject, signal } from '@angular/core';
 import { CopilotKit, injectAgentStore } from '@copilotkit/angular';
 
@@ -37,6 +39,7 @@ import { CopilotKit, injectAgentStore } from '@copilotkit/angular';
 })
 export class HeadlessChatComponent {
   private readonly copilotKit = inject(CopilotKit);
+  // headless : inject agent store
   readonly store = injectAgentStore('default');
   readonly draft = signal('');
 
@@ -55,6 +58,7 @@ export class HeadlessChatComponent {
       content,
     });
     this.draft.set('');
+    // headless : run agent
     await this.copilotKit.core.runAgent({ agent });
   }
 }

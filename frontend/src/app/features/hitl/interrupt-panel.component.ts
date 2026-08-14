@@ -1,8 +1,10 @@
+// human in the loop : handle an interrupt
 /**
  * "Handle an interrupt", verbatim. The controller is headless, so this panel
  * renders nothing until the backend emits an AG-UI interrupt.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/human-in-the-loop
  */
+
 import { Component } from '@angular/core';
 import { injectInterrupt } from '@copilotkit/angular';
 
@@ -35,6 +37,7 @@ type ReviewRequest = {
   `,
 })
 export class InterruptPanelComponent {
+  // human in the loop : inject interrupt
   protected readonly controller = injectInterrupt<ReviewRequest>({
     agentId: 'default',
   });

@@ -12,10 +12,7 @@ import { z } from 'zod';
 
 import { routes } from './app.routes';
 
-/**
- * Host function exposed to sandboxed Open Generative UI, verbatim from
- * https://docs.copilotkit.ai/angular/ms-agent-python/guides/frontend-tools-generative-ui
- */
+// frontend tools : open generative ui host function
 const setDashboardFilter: SandboxFunction<{ filter: string }> = {
   name: 'setDashboardFilter',
   description: 'Set the active dashboard filter',
@@ -49,11 +46,14 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideClientHydration(),
+    // quickstart : connect to copilot runtime
     provideCopilotKit({
       runtimeUrl: 'http://localhost:8201/api/copilotkit',
+      // a2ui : recover incomplete streams
       a2ui: {
         recovery: { showAfterMs: 2_000, showAfterAttempts: 2 },
       },
+      // frontend tools : open generative ui
       openGenerativeUI: {
         // `sandboxFunctions` is typed `SandboxFunction[]`, i.e.
         // `SandboxFunction<Record<string, unknown>>[]`, so the guide's

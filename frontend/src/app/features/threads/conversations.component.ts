@@ -1,9 +1,11 @@
+// threads : threads drawer and chat
 /**
  * The drawer-plus-chat sample, verbatim. Both sit under one
  * `provideCopilotChatConfiguration`, which is what makes selection and
  * new-thread actions in the drawer update the chat.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/threads-memory-attachments-headless
  */
+
 import { Component } from '@angular/core';
 import {
   CopilotChat,

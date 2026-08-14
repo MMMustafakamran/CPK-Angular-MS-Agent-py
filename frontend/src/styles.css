@@ -3,6 +3,7 @@
 /* Quickstart step "Import the styles". Self-contained — the chat renders
    without any other CSS.
    https://docs.copilotkit.ai/angular/ms-agent-python/quickstart */
+
 @import '@copilotkit/angular/styles.css';
 
 /* ------------------------------------------------------------------ */
@@ -245,10 +246,7 @@ td > code {
   font-weight: 700;
 }
 
-/* ------------------------------------------------------------------ */
-/* Chat UI guide — "Scope CSS changes"                                 */
-/* https://docs.copilotkit.ai/angular/ms-agent-python/guides/chat-ui              */
-/* ------------------------------------------------------------------ */
+/* chat ui : scope css changes */
 .support-chat .copilotKitUserMessage {
   color: white;
   background: #2563eb;
@@ -262,10 +260,7 @@ td > code {
   border-radius: 0.75rem;
 }
 
-/* ------------------------------------------------------------------ */
-/* A2UI guide — "Style rendered components"                            */
-/* https://docs.copilotkit.ai/angular/ms-agent-python/guides/a2ui                 */
-/* ------------------------------------------------------------------ */
+/* a2ui : style rendered components */
 .a2ui-row {
   display: flex;
   flex-wrap: wrap;

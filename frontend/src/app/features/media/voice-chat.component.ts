@@ -1,12 +1,15 @@
+// voice & multimodal : accept voice input and configure attachments
 /**
  * "Configure attachments", verbatim: the guide's `MULTIMODAL_ATTACHMENTS`
  * config bound to the chat exactly as its `media-chat.component.html` snippet
  * shows. The microphone control needs no option — it is always present.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/voice-multimodal
  */
+
 import { Component } from '@angular/core';
 import { CopilotChat, type AttachmentsConfig } from '@copilotkit/angular';
 
+// voice & multimodal : configure attachments
 const MULTIMODAL_ATTACHMENTS: AttachmentsConfig = {
   enabled: true,
   accept: 'image/*,application/pdf',

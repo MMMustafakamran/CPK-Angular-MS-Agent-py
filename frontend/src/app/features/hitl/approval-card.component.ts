@@ -1,7 +1,9 @@
+// human in the loop : register a decision tool renderer
 /**
  * "Register a decision tool" renderer, verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/human-in-the-loop
  */
+
 import { Component, input } from '@angular/core';
 import {
   type HumanInTheLoopToolCall,

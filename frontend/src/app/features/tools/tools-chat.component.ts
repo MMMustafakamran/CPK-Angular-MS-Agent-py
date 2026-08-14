@@ -1,3 +1,4 @@
+// frontend tools : register tools and renderers
 /**
  * Mounts both halves of the guide's frontend-tools section against one chat.
  *
@@ -17,6 +18,7 @@
  *
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/frontend-tools-generative-ui
  */
+
 import { Component, signal } from '@angular/core';
 import {
   CopilotSidebar,
@@ -49,12 +51,14 @@ export class ToolsChatComponent {
   protected readonly background = signal(DEFAULT_BACKGROUND);
 
   constructor() {
+    // frontend tools : render a tool result (server tool)
     registerRenderToolCall({
       name: 'getWeather',
       args: z.object({ city: z.string() }),
       component: WeatherCardComponent,
     });
 
+    // frontend tools : register a browser tool
     registerFrontendTool(createBackgroundTool(this.background));
   }
 }

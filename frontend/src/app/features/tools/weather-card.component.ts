@@ -1,7 +1,9 @@
+// frontend tools : render a tool result
 /**
  * "Render a tool result", verbatim.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/frontend-tools-generative-ui
  */
+
 import { Component, input } from '@angular/core';
 import { type AngularToolCall, type ToolRenderer } from '@copilotkit/angular';
 

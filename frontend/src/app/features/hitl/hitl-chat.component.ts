@@ -1,3 +1,4 @@
+// human in the loop : hitl chat
 /**
  * Puts the guide's two human-in-the-loop paths side by side: the decision tool
  * (registered by ApprovalToolsService, rendered inside the chat's tool-call
@@ -7,6 +8,7 @@
  * Injecting ApprovalToolsService is what constructs it, and construction is
  * what performs the `registerHumanInTheLoop` call.
  */
+
 import { Component, inject } from '@angular/core';
 import { CopilotChat } from '@copilotkit/angular';
 

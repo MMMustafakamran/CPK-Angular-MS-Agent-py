@@ -1,8 +1,10 @@
+// shared state : send read-only application context
 /**
  * "Send read-only application context", verbatim. The accessor form keeps the
  * signal reads reactive, so changing the timezone re-registers the context.
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/shared-state
  */
+
 import { Component, signal } from '@angular/core';
 import { connectAgentContext } from '@copilotkit/angular';
 

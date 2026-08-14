@@ -1,5 +1,4 @@
-# #//////// BACKEND CODE FOR QUICKSTART, TOOL RENDERING, SHARED STATE, AUTH //////////////////////
-
+# quickstart : connect the selected agent backend
 from __future__ import annotations
 import os
 import uvicorn
@@ -18,7 +17,8 @@ load_dotenv()
 class SearchItem(BaseModel):
     query: str
     done: bool
-    
+
+# shared state : state schema
 STATE_SCHEMA: dict[str, object] = {
     "language": {
         "type": "string",
@@ -30,6 +30,7 @@ PREDICT_STATE_CONFIG: dict[str, dict[str, str]] = {
     "language": {"tool": "update_language", "tool_argument": "language"}
 }
 
+# frontend tools : server tool getWeather
 @tool
 def getWeather(
     location: Annotated[str, Field(description="The location to get weather for")],
@@ -38,6 +39,7 @@ def getWeather(
     return f"The weather for {normalized} is 70 degrees."
 
 
+# shared state : update language tool
 @tool
 def update_language(
     language: Annotated[str, Field(description="Preferred language: 'english' or 'spanish'")],
@@ -66,6 +68,7 @@ def _build_chat_client():
 
 
 
+# shared state : agent with state schema
 def create_agent(chat_client: SupportsChatGetResponse) -> AgentFrameworkAgent:
     base_agent = Agent(
         name="sample_agent",
@@ -96,6 +99,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# quickstart : expose agent framework endpoint
 add_agent_framework_fastapi_endpoint(app=app, agent=agent, path="/")
 
 if __name__ == "__main__":
