@@ -561,48 +561,32 @@ async function recordPage(config: PageRecordConfig): Promise<void> {
       const t4Box = await tab4.boundingBox();
       if (t4Box) {
         await humanGlide(page, t4Box.x + t4Box.width / 2, t4Box.y + t4Box.height / 2, 20);
+        // 1st click: closes the open popup via clickOutsideToClose
         await humanClick(page);
+        console.log(`   1st click on Sidebar tab (closes open popup)...`);
+        await sleep(400);
+        // 2nd click: activates the Sidebar tab
+        await humanClick(page);
+        console.log(`   2nd click on Sidebar tab (switches to Sidebar view)...`);
       }
-      await sleep(1000);
+      await sleep(1200);
 
-      // 1. Click 'Open sidebar'
+      // Click 'Open sidebar' button
       const openSidebarBtn = page.locator('button:has-text("Open sidebar")').first();
-      if (await openSidebarBtn.isVisible()) {
+      if (await openSidebarBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
         const osBox = await openSidebarBtn.boundingBox();
         if (osBox) {
           await humanGlide(page, osBox.x + osBox.width / 2, osBox.y + osBox.height / 2, 15);
           await humanClick(page);
-          console.log(`   Clicked 'Open sidebar'...`);
+          console.log(`   Clicked 'Open sidebar' button...`);
         }
       }
       await sleep(1500);
 
-      // 2. Click inside the docked sidebar chat surface
-      const sidebarInput = page.locator('.copilotKitSidebar textarea, copilot-sidebar textarea, textarea').last();
-      if (await sidebarInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-        const sBox = await sidebarInput.boundingBox();
-        if (sBox) {
-          await humanGlide(page, sBox.x + 80, sBox.y + sBox.height / 2, 20);
-          await humanClick(page);
-          console.log(`   Clicked inside the docked sidebar input...`);
-        }
-      } else {
-        await humanGlide(page, 1680, 500, 25);
-        await humanClick(page);
-      }
-      await sleep(2500);
-
-      // 3. Click 'Close sidebar' button to demonstrate closing animation
-      const closeSidebarBtn = page.locator('button:has-text("Close sidebar")').first();
-      if (await closeSidebarBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-        const csBox = await closeSidebarBtn.boundingBox();
-        if (csBox) {
-          await humanGlide(page, csBox.x + csBox.width / 2, csBox.y + csBox.height / 2, 18);
-          await humanClick(page);
-          console.log(`   Clicked 'Close sidebar'...`);
-        }
-      }
-      await sleep(2500);
+      // Glide mouse to center of the opened docked sidebar
+      await humanGlide(page, 1680, 500, 25);
+      console.log(`   Sidebar open — showcasing 480px docked panel...`);
+      await sleep(4000);
 
     } else if (config.id === 'attachments') {
       // --------------------------------------------------
