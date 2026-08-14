@@ -136,6 +136,19 @@ export class StatusBadge {
               <span>Copy path</span>
             }
           </button>
+          <a
+            [href]="ideUri()"
+            class="code-figure__open-ide"
+            [attr.aria-label]="'Open ' + path() + ' in IDE'"
+            title="Open file in IDE"
+          >
+            <svg class="code-figure__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>Open in IDE</span>
+          </a>
         </div>
         <span class="code-figure__meta">
           @if (note()) {
@@ -165,6 +178,12 @@ export class SourceCode {
   protected readonly pathCopied = signal(false);
   protected readonly body = computed(() => readSource(this.path()));
   protected readonly language = computed(() => languageForPath(this.path()));
+  protected readonly ideUri = computed(() => {
+    const p = this.path();
+    const base = 'c:/Users/dynamic computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular';
+    const fullPath = p.startsWith('backend/') ? `${base}/${p}` : `${base}/frontend/${p}`;
+    return `vscode://file/${fullPath}`;
+  });
   protected readonly html = computed(() =>
     highlight(this.body(), this.language()),
   );

@@ -123,7 +123,8 @@ td > code {
   word-break: break-all;
 }
 
-.code-figure__copy-path {
+.code-figure__copy-path,
+.code-figure__open-ide {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -135,11 +136,13 @@ td > code {
   font-size: 0.68rem;
   font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.15s ease;
   line-height: 1.2;
 }
 
-.code-figure__copy-path:hover {
+.code-figure__copy-path:hover,
+.code-figure__open-ide:hover {
   background: #22304d;
   border-color: #3e517a;
   color: #f1f5f9;
