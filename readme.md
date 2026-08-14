@@ -150,3 +150,29 @@ npm run dev
 npm run runtime    # Starts Copilot Runtime on http://localhost:8201
 npm start          # Starts Angular Dev Server on http://localhost:4200
 ```
+
+#### 3. Automated Screen Recording & Demonstration Suite
+
+Once the backend (`8200`), runtime (`8201`), and frontend dev server (`4200`) are running:
+
+```bash
+cd frontend
+
+# Record all 11 pages in sequence
+npm run record
+
+# Record a specific page individually
+npm run record -- --page=quickstart
+npm run record -- --page=chat-ui
+npm run record -- --page=frontend-tools-generative-ui
+npm run record -- --page=a2ui
+npm run record -- --page=voice-multimodal
+npm run record -- --page=human-in-the-loop
+npm run record -- --page=shared-state
+npm run record -- --page=threads
+npm run record -- --page=memory
+npm run record -- --page=attachments
+npm run record -- --page=headless
+```
+
+Recordings are saved to `frontend/recordings/<page_id>.webm`.

@@ -8,6 +8,13 @@ import { AppChrome } from './components/app-chrome';
  * `src/app/lib/nav-config.ts`.
  */
 export const routes: Routes = [
+  // Chrome-free IDE Simulator.
+  {
+    path: 'ide',
+    loadComponent: () =>
+      import('./pages/ide-view.component').then((m) => m.IdeViewComponent),
+  },
+
   // Chrome-free demos.
   {
     path: 'quickstart/demo',
