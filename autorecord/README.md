@@ -163,15 +163,29 @@ autorecord/
   ```
 - Closes Notepad and completes the recording.
 
-### 3. Threads & Cloud Auth (`threads.action.ts`)
-- Showcases the Headless thread list (`app-thread-list` on `injectThreads`) and `CopilotThreadsDrawer`.
-- Opens Windows 11 **Notepad** and types:
-  ```text
-  NOTE: Threads & Cloud Authentication
+### 3. Threads & CopilotThreadsDrawer (`threads.action.ts`)
+- **Step 1 (Docs)**: Navigates through the official threads guide, then switches to VS Code via the taskbar.
+- **Step 2 (IDE)**: Showcases `threads-demo.component.ts` (lines 10–35), demonstrating `ThreadListComponent` and `ConversationsComponent`.
+- **Step 3 (Live Demo)**:
+  - **Headless Threads Test**: Clicks `New conversation` in the headless `injectThreads` list, demonstrating that it displays `Loading conversations...` / empty state.
+  - **CopilotThreadsDrawer Sidebar Test**: Clicks the drawer sidebar, demonstrating that nothing opens / no threads are loaded.
+  - **Agent Chat Conversation**: Types and submits a test prompt, demonstrating that conversation streaming with the agent functions properly while thread history/drawer fails.
+  - **Notepad Developer Note**:
+    ```text
+    Issue in Threads & CopilotThreadsDrawer:
 
-  - the project isnt authenticated by the copilotkit cloud via browser as the initial setup wasnt done through copilotkit cli
-  ```
-- Closes Notepad and completes the recording.
+    - integrated ThreadListComponent (injectThreads) and CopilotThreadsDrawer from @copilotkit/angular
+    - headless list shows "Loading conversations..." / no threads returned
+    - CopilotThreadsDrawer sidebar does not load threads (requires CopilotKit Cloud auth / CLI setup)
+    - chat conversation with agent works properly, but threads drawer is non-functional
+
+    Package versions used:
+    - @angular/core & @angular/cdk: 22.1.x
+    - @copilotkit/angular: 0.3.1
+    - @copilotkit/runtime: 1.68.1
+    - @ag-ui/client: 0.0.57
+    ```
+  - Pauses 5 seconds for reading and smoothly closes Notepad.
 
 ### 4. A2UI Schemas & Incomplete Catalog Documentation (`a2ui.action.ts`)
 - **Doc-Only Interleaved Presentation Mode**: Stays on the official documentation page while opening a side-by-side Windows 11 Notepad window (`a2ui-issue.txt`) on the right.
