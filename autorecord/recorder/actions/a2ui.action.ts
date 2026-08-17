@@ -130,97 +130,96 @@ export const runA2uiAction: PageActionHandler = async (
   await sleep(1200);
 
   // 2. Open Notepad window on the right side of the screen
-  await openNotepadWindow(page, 'a2ui-issue.txt', {
+  await openNotepadWindow(page, 'a2ui-notes.txt', {
     right: '32px',
     top: '95px',
     width: '680px',
     height: '560px',
   });
 
-  // Type title in Notepad
+  // Type header in Notepad
   await typeInNotepad(page, [
-    'Issue in A2UI schemas styling & recovery docs:',
+    'a2ui docs error',
     '',
   ], 1550, 240);
-  await sleep(600);
+  await sleep(500);
 
   // 3. Highlight Snippet 1: dynamicString in fixedDefinitions
   console.log(`   👉 Step 1: Selecting dynamicString in fixedDefinitions...`);
   await selectTextWithMouse(page, 'dynamicString', 'fixedDefinitions');
-  await sleep(1000);
+  await sleep(800);
 
   // Type note 1 in Notepad
   console.log(`   📝 Typing Note 1 in Notepad...`);
   await typeInNotepad(
     page,
     [
-      '- code examples provided are incomplete',
-      '- in a2ui-catalogs.ts, fixedDefinitions uses undefined dynamicString',
+      'code examples are incomplete',
+      '- fixedDefinitions uses undefined dynamicString',
     ],
     1550,
     300,
   );
-  await sleep(800);
+  await sleep(600);
 
   // 4. Highlight Snippet 2: beautifulCatalog, declarativeCatalog, fixedCatalog
   console.log(`   👉 Step 2: Selecting undefined catalogs in a2uiConfigForFeature...`);
   await selectTextWithMouse(page, 'beautifulCatalog', 'a2uiConfigForFeature');
-  await sleep(400);
+  await sleep(350);
   await selectTextWithMouse(page, 'declarativeCatalog', 'a2uiConfigForFeature');
-  await sleep(400);
+  await sleep(350);
   await selectTextWithMouse(page, 'fixedCatalog', 'a2uiConfigForFeature');
-  await sleep(1000);
+  await sleep(800);
 
   // Type note 2 in Notepad
   console.log(`   📝 Typing Note 2 in Notepad...`);
   await typeInNotepad(
     page,
     [
-      '- beautifulCatalog, declarativeCatalog, and fixedCatalog are referenced in a2uiConfigForFeature but not defined anywhere',
+      '- in a2ui-catalogs.ts beautifulCatalog, declarativeCatalog and fixedCatalog are used but not defined anywhere',
     ],
     1550,
     360,
   );
-  await sleep(800);
+  await sleep(600);
 
   // 5. Highlight Snippet 3: productCatalog in app.config.ts
   console.log(`   👉 Step 3: Selecting productCatalog in app.config.ts...`);
   await selectTextWithMouse(page, 'productCatalog', 'provideCopilotKit');
-  await sleep(1000);
+  await sleep(800);
 
   // Type note 3 in Notepad
   console.log(`   📝 Typing Note 3 in Notepad...`);
   await typeInNotepad(
     page,
     [
-      '- app.config.ts references undefined productCatalog',
+      '- app.config.ts has undefined productCatalog',
     ],
     1550,
     420,
   );
-  await sleep(800);
+  await sleep(600);
 
   // 6. Highlight Snippet 4: styles.css classes
   console.log(`   👉 Step 4: Selecting styles.css classes...`);
   await selectTextWithMouse(page, '.a2ui-row', 'styles.css');
-  await sleep(400);
+  await sleep(350);
   await selectTextWithMouse(page, '.a2ui-flight-card', 'styles.css');
-  await sleep(1000);
+  await sleep(800);
 
   // Type note 4 & conclusion in Notepad
   console.log(`   📝 Typing conclusion in Notepad...`);
   await typeInNotepad(
     page,
     [
-      '- only raw fixed schema definition and styles.css are given',
-      '- without catalog definition a2ui components cannot render in chat',
+      '- only fixed schema and styles.css given',
       '',
-      'please elaborate docs to include at least one complete catalog definition so users can integrate it',
+      'need at least one full catalog definition in docs so components can render',
     ],
     1550,
     480,
   );
-  await sleep(1200);
+  await sleep(1000);
 
   // 7. Reading pause on the completed Notepad notes
   console.log(`   📖 Pausing for reading completed Notepad notes...`);
@@ -229,5 +228,5 @@ export const runA2uiAction: PageActionHandler = async (
 
   // 8. Close Notepad window
   await closeNotepadNote(page);
-  await sleep(1500);
+  await sleep(1200);
 };

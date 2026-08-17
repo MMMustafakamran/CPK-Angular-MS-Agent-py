@@ -108,8 +108,8 @@ export const runThreadsAction: PageActionHandler = async (
     }
   }
 
-  // 6. Open Windows 11 Notepad and type developer evaluation note
-  console.log(`   📝 Opening Notepad to type Threads evaluation note...`);
+  // 6. Open Windows 11 Notepad and type informal developer notes
+  console.log(`   📝 Opening Notepad to type informal developer notes...`);
   await openNotepadWindow(page, 'threads-issue.txt', {
     right: '32px',
     top: '95px',
@@ -120,18 +120,17 @@ export const runThreadsAction: PageActionHandler = async (
   await typeInNotepad(
     page,
     [
-      'Issue in Threads & CopilotThreadsDrawer:',
+      'threads error',
       '',
-      '- integrated ThreadListComponent (injectThreads) and CopilotThreadsDrawer from @copilotkit/angular',
-      '- headless list shows "Loading conversations..." / no threads returned',
-      '- CopilotThreadsDrawer sidebar does not load threads (requires CopilotKit Cloud auth / CLI setup)',
-      '- chat conversation with agent works properly, but threads drawer is non-functional',
+      'integrated ThreadList and CopilotThreadsDrawer from copilot-kit-angular',
+      '- headless list just shows Loading conversations... and no threads',
+      '- drawer sidebar doesnt open or show any threads',
+      '- chat with agent works fine but threads drawer is not showing anything',
       '',
-      'Package versions used:',
-      '- @angular/core & @angular/cdk: 22.1.x',
-      '- @copilotkit/angular: 0.3.1',
-      '- @copilotkit/runtime: 1.68.1',
-      '- @ag-ui/client: 0.0.57',
+      'pkgs:',
+      '@angular/cdk 22',
+      '@copilotkit/angular 0.3.1',
+      '@copilotkit/runtime 1.68.1',
     ],
     1550,
     280,

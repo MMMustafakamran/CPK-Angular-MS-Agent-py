@@ -43,14 +43,14 @@ export const runVoiceAction: PageActionHandler = async (
   // Showcase the clicked / active recording state
   await sleep(1800);
 
-  // 3. Open Notepad from taskbar and type developer explanation note
+  // 3. Open Notepad from taskbar and type hurried unformatted developer note
   await showNotepadNote(
     page,
-    'Voice & Audio Transcription Note',
+    'voice-notes.txt',
     [
-      'NOTE: Voice & Audio Transcription',
+      'voice / audio transcribe error',
       '',
-      '- voice works on browser but no tts implemented in the server file thus not working',
+      'voice recording starts in browser UI but backend server has no tts / audio handler implemented so nothing is returned',
     ],
   );
 

@@ -1,6 +1,13 @@
--slots page doesnt give prompts and jsut ends
-give prompt to all tabs
+To correct:
 
-- programmtic page error
+Error ones:
 
-- Readables - Agent not catching context
+- a2ui cataloge defination:
+
+- a2ui:
+  agent doesnt know context for my collegues , even though in the inspector , context sent to agent shows collegues is present
+
+- threads :
+  threads not working at cli no authentication
+  headless works
+  thread memory works

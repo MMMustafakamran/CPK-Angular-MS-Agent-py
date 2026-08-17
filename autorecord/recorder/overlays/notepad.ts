@@ -17,18 +17,18 @@ export async function openNotepadWindow(
   pos?: NotepadPosition,
 ): Promise<void> {
   console.log(`📝 Opening Notepad: ${title}...`);
-  await sleep(400);
+  await sleep(300);
 
   // Glide down to taskbar Notepad icon and click it
-  await humanGlide(page, 1038, 1055, 25);
+  await humanGlide(page, 1038, 1055, 22);
   await humanClick(page);
-  await sleep(200);
+  await sleep(150);
 
   const top = pos?.top ?? '120px';
   const left = pos?.left ?? (pos?.right ? 'auto' : '50%');
   const right = pos?.right ?? 'auto';
-  const width = pos?.width ?? '740px';
-  const height = pos?.height ?? '480px';
+  const width = pos?.width ?? '700px';
+  const height = pos?.height ?? '460px';
   const transform =
     pos?.transform ?? (pos?.right ? 'none' : 'translateX(-50%) scale(0.96)');
 
@@ -82,10 +82,10 @@ export async function openNotepadWindow(
     },
   );
 
-  await sleep(500);
+  await sleep(400);
 }
 
-/** Types new lines of text into the active Notepad body with realistic keystroke delay */
+/** Types new lines of text into the active Notepad body with rapid hurried keystroke rhythm */
 export async function typeInNotepad(
   page: Page,
   newLines: string[],
@@ -93,9 +93,9 @@ export async function typeInNotepad(
   focusY = 320,
 ): Promise<void> {
   // Move cursor into Notepad body and click to focus
-  await humanGlide(page, focusX, focusY, 20);
+  await humanGlide(page, focusX, focusY, 18);
   await humanClick(page);
-  await sleep(250);
+  await sleep(200);
 
   const textToAdd = newLines.join('\n');
 
@@ -106,7 +106,6 @@ export async function typeInNotepad(
       ({ nextChar }) => {
         const el = document.getElementById('notepad-content-body');
         if (el) {
-          // If ends with ' |', replace caret with next character
           if (el.textContent?.endsWith(' |')) {
             el.textContent = el.textContent.slice(0, -2) + nextChar + ' |';
           } else {
@@ -118,10 +117,11 @@ export async function typeInNotepad(
       { nextChar: char },
     );
 
-    let delay = 35 + Math.floor(Math.random() * 30); // 35-65ms typing rhythm
-    if (char === '\n') delay = 220 + Math.floor(Math.random() * 80);
-    else if (char === '.' || char === ':' || char === '-') delay = 140 + Math.floor(Math.random() * 50);
-    else if (char === ' ') delay = 50 + Math.floor(Math.random() * 20);
+    // Rapid hurried typing rhythm: 25-50ms with occasional burst
+    let delay = 25 + Math.floor(Math.random() * 25);
+    if (char === '\n') delay = 160 + Math.floor(Math.random() * 60);
+    else if (char === '.' || char === ':' || char === '-') delay = 90 + Math.floor(Math.random() * 40);
+    else if (char === ' ') delay = 35 + Math.floor(Math.random() * 15);
 
     await sleep(delay);
   }
@@ -134,17 +134,17 @@ export async function typeInNotepad(
     }
   });
 
-  await sleep(300);
+  await sleep(250);
 }
 
-/** Standard full-cycle note (open, type all, wait, close) */
+/** Standard full-cycle note (open, type all in a hurry, wait, close) */
 export async function showNotepadNote(
   page: Page,
   title: string,
   textLines: string[],
 ): Promise<void> {
   await openNotepadWindow(page, title);
-  await typeInNotepad(page, textLines, 960, 260);
+  await typeInNotepad(page, textLines, 960, 240);
   await sleep(4000);
 }
 
@@ -161,8 +161,8 @@ export async function closeNotepadNote(page: Page): Promise<void> {
       np.style.transform = 'scale(0.96)';
       setTimeout(() => {
         np.remove();
-      }, 350);
+      }, 300);
     }
   });
-  await sleep(400);
+  await sleep(350);
 }
