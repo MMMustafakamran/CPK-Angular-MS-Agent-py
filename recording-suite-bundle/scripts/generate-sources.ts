@@ -12,15 +12,16 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-/** Files and directories whose contents routes are allowed to display. */
+/** Files and directories whose contents routes are allowed to display in the IDE simulator. */
 const TARGETS = [
   'server.ts',
   'src/styles.css',
   'src/app/app.config.ts',
   'src/app/features',
   '../backend/main.py',
+  '../backend/agent.py',
   '../backend/pyproject.toml',
-  '../backend/.env.example',
+  '../.env.example',
 ];
 
 const EXTENSIONS = ['.ts', '.html', '.css', '.py', '.toml', '.example', '.json'];
