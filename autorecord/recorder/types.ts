@@ -12,6 +12,7 @@ export interface PageRecordConfig {
   demoUrl: string;
   prompt: string;
   waitAfterPromptMs?: number;
+  docOnly?: boolean;
 }
 
 export type PageActionHandler = (

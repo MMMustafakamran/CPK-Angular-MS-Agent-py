@@ -44,5 +44,5 @@ export const runHeadlessUiAction: PageActionHandler = async (
   }
 
   // Detect and wait for headless response streaming
-  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 6000);
+  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 4000);
 };

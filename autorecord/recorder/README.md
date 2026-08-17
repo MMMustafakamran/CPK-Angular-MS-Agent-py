@@ -15,7 +15,7 @@ autorecord/
 └── recorder/
     ├── README.md              # Architecture reference (this file)
     ├── types.ts               # Interface definitions
-    ├── config.ts              # Page configurations and line ranges for all 13 routes
+    ├── config.ts              # Page configurations and line ranges for all 13 routes (4s pause)
     ├── engine.ts              # Playwright browser lifecycle, taskbar transitions & coordinator
     ├── diagnostics.ts         # Pre-flight service checks (Angular :4200, Runtime :8201, Backend :8200)
     ├── ide/
@@ -24,17 +24,20 @@ autorecord/
     │   ├── taskbar.ts         # Windows 11 taskbar simulation & app switching
     │   ├── cursor.ts          # Virtual mouse cursor physics and Bézier animations
     │   ├── nextjs-error.ts    # Error overlay fallback utilities
-    │   └── notepad.ts         # Slide-up Notepad developer notes
+    │   └── notepad.ts         # Slide-up Notepad developer notes (showNotepadNote / closeNotepadNote)
+    ├── assets/
+    │   └── sample_chart.png   # Sample image attachment asset
     └── actions/
+        ├── attachments.action.ts   # Interactive + button, CDK menu, DataTransfer & thumbnail showcase
+        ├── voice.action.ts         # Transcribe mic button click + Notepad TTS explanation note
+        ├── threads.action.ts       # Headless thread list & drawer showcase + Notepad cloud auth note
         ├── chat-ui.action.ts       # 4-surface switcher: Inline chat -> Custom message -> Popup -> Sidebar
         ├── tools.action.ts         # Server tool (WeatherCardComponent) + Client tool (change_background)
         ├── hitl.action.ts          # Human-in-the-loop decision card + "Approve" button interaction
         ├── shared-state.action.ts  # Workspace priority toggle + reactive context cards
         ├── headless-ui.action.ts   # Hand-built headless composer & transcript over injectAgentStore
-        ├── voice.action.ts         # Voice input & multimodal attachments controls
-        ├── threads.action.ts       # Headless thread list & CopilotThreadsDrawer
         ├── memory.action.ts        # injectMemories list & runtime fallback
-        └── index.ts                # Action dispatcher & standard chat submission
+        └── index.ts                # Action dispatcher & standard chat submission (4s reading pause)
 ```
 
 ---
@@ -55,10 +58,10 @@ autorecord/
 3. **Step 3 — Live Interactive Demonstration**:
    - Navigates directly to the isolated demo endpoint (`http://localhost:4200/<route>/demo`).
    - Injects the simulated Windows 11 Taskbar + Virtual Mouse cursor.
-   - Types tailored prompts with natural keystroke timing and executes interactions (e.g. Chat UI tab switching, Generative WeatherCard rendering, HITL approval gate, Headless custom transcript, Shared State priority updates).
+   - Types tailored prompts with natural keystroke timing and executes interactions (e.g. Chat UI tab switching, Generative WeatherCard rendering, HITL approval gate, Headless custom transcript, Shared State priority updates, interactive file attachments, and Notepad developer explanations).
 
 4. **Video Export**:
-   - Clean runs saved to `autorecord/videos/MSPY-angular-<FeatureName>.webm` (`✅ [PASS]`).
+   - Clean runs saved to `autorecord/videos/MSPY-angular - <NN><FeatureName>.webm` (`✅ [PASS]`).
 
 ---
 
@@ -90,8 +93,11 @@ cd autorecord
 npm run record -- --page=quickstart
 npm run record -- --page=chat-ui
 npm run record -- --page=frontend-tools-generative-ui
+npm run record -- --page=voice-multimodal
 npm run record -- --page=human-in-the-loop
 npm run record -- --page=shared-state
+npm run record -- --page=threads
+npm run record -- --page=attachments
 npm run record -- --page=headless
 
 # Record all 13 configured pages sequentially

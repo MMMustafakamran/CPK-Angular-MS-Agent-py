@@ -1,6 +1,8 @@
 import { type Page } from 'playwright';
 import { humanClick, humanGlide, sleep } from '../overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../types';
+import { runA2uiAction } from './a2ui.action';
+import { runAttachmentsAction } from './attachments.action';
 import { runChatUiAction } from './chat-ui.action';
 import { runHeadlessUiAction } from './headless-ui.action';
 import { runHitlAction } from './hitl.action';
@@ -10,15 +12,30 @@ import { runThreadsAction } from './threads.action';
 import { runToolsAction } from './tools.action';
 import { runVoiceAction } from './voice.action';
 
+const ASSISTANT_SELECTORS = [
+  '.copilotKitAssistantMessage',
+  '[data-message-role="assistant"]',
+  '[data-role="assistant"]',
+  'article[data-role="assistant"]',
+  'app-custom-assistant-message',
+  'article.answer',
+  '.support-answer',
+  '.answer',
+  'app-weather-card',
+  'app-approval-card',
+  '.copilotKitMessage:not(:first-child)',
+  '[class*="assistant"]',
+].join(', ');
+
 /**
  * Actively waits until:
  * 1. An assistant response message appears with text content or tool rendering.
  * 2. Streaming finishes (text content stops changing for 2+ seconds).
- * 3. Glides the mouse over the response and waits postWaitMs (default 6000ms) for reading.
+ * 3. Glides the mouse over the response and waits postWaitMs (default 4000ms) for reading.
  */
 export async function waitForAgentResponseCompletion(
   page: Page,
-  postWaitMs = 6000,
+  postWaitMs = 4000,
 ): Promise<void> {
   console.log(`   ⏳ Actively detecting AI agent response start & streaming progress...`);
 
@@ -27,14 +44,12 @@ export async function waitForAgentResponseCompletion(
   const startTime = Date.now();
   while (Date.now() - startTime < 30000) {
     const text = await page
-      .evaluate(() => {
-        const msgs = document.querySelectorAll(
-          '.copilotKitAssistantMessage, [data-message-role="assistant"], [data-role="assistant"], article[data-role="assistant"], .copilotKitMessage:not(:first-child), [class*="assistant"], app-weather-card, app-approval-card',
-        );
+      .evaluate((selectors) => {
+        const msgs = document.querySelectorAll(selectors);
         if (msgs.length === 0) return '';
         const lastMsg = msgs[msgs.length - 1];
         return (lastMsg.textContent || '').trim();
-      })
+      }, ASSISTANT_SELECTORS)
       .catch(() => '');
 
     if (text.length > 2) {
@@ -53,14 +68,12 @@ export async function waitForAgentResponseCompletion(
 
     while (Date.now() - streamStart < 45000) {
       const currentText = await page
-        .evaluate(() => {
-          const msgs = document.querySelectorAll(
-            '.copilotKitAssistantMessage, [data-message-role="assistant"], [data-role="assistant"], article[data-role="assistant"], .copilotKitMessage:not(:first-child), [class*="assistant"], app-weather-card, app-approval-card',
-          );
+        .evaluate((selectors) => {
+          const msgs = document.querySelectorAll(selectors);
           if (msgs.length === 0) return '';
           const lastMsg = msgs[msgs.length - 1];
           return (lastMsg.textContent || '').trim();
-        })
+        }, ASSISTANT_SELECTORS)
         .catch(() => '');
 
       if (currentText.length > 0 && currentText === previousText) {
@@ -84,11 +97,7 @@ export async function waitForAgentResponseCompletion(
   }
 
   // Step 3: Glide cursor smoothly to the finished response message
-  const assistantLocator = page
-    .locator(
-      '.copilotKitAssistantMessage, [data-message-role="assistant"], [data-role="assistant"], article[data-role="assistant"], app-weather-card, app-approval-card, .copilotKitMessage:not(:first-child)',
-    )
-    .last();
+  const assistantLocator = page.locator(ASSISTANT_SELECTORS).last();
 
   if (await assistantLocator.isVisible({ timeout: 3000 }).catch(() => false)) {
     const abBox = await assistantLocator.boundingBox();
@@ -182,20 +191,20 @@ export const runStandardAction: PageActionHandler = async (
   }
 
   // 2. Actively wait for the response to stream completely and pause for reading
-  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 6500);
+  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 4000);
 };
 
 const ACTION_MAP: Record<string, PageActionHandler> = {
   quickstart: runStandardAction,
   'chat-ui': runChatUiAction,
   'frontend-tools-generative-ui': runToolsAction,
-  a2ui: runStandardAction,
+  a2ui: runA2uiAction,
   'voice-multimodal': runVoiceAction,
   'human-in-the-loop': runHitlAction,
   'shared-state': runSharedStateAction,
   threads: runThreadsAction,
   memory: runMemoryAction,
-  attachments: runStandardAction,
+  attachments: runAttachmentsAction,
   headless: runHeadlessUiAction,
   'copilot-runtime': runStandardAction,
   'backend-agent': runStandardAction,

@@ -79,5 +79,5 @@ export const runHitlAction: PageActionHandler = async (
   }
 
   // Wait for agent to resume execution and stream completion
-  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 6000);
+  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 4000);
 };

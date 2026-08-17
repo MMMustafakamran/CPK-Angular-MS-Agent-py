@@ -1,109 +1,168 @@
 import { type Page } from 'playwright';
 import { humanClick, humanGlide, sleep } from './cursor';
 
-/** Injects an authentic Windows 11 Notepad window and types unformatted developer notes with human cadence */
-export async function showNotepadNote(
+export interface NotepadPosition {
+  top?: string;
+  left?: string;
+  right?: string;
+  width?: string;
+  height?: string;
+  transform?: string;
+}
+
+/** Opens an authentic Windows 11 Notepad window overlay */
+export async function openNotepadWindow(
   page: Page,
   title: string,
-  textLines: string[],
+  pos?: NotepadPosition,
 ): Promise<void> {
   console.log(`📝 Opening Notepad: ${title}...`);
-  await sleep(1000);
+  await sleep(400);
 
   // Glide down to taskbar Notepad icon and click it
   await humanGlide(page, 1038, 1055, 25);
   await humanClick(page);
   await sleep(200);
 
-  // Activate taskbar indicator and animate window opening
-  await page.evaluate(`
-    (function() {
-      var ind = document.getElementById('win11-notepad-indicator');
+  const top = pos?.top ?? '120px';
+  const left = pos?.left ?? (pos?.right ? 'auto' : '50%');
+  const right = pos?.right ?? 'auto';
+  const width = pos?.width ?? '740px';
+  const height = pos?.height ?? '480px';
+  const transform =
+    pos?.transform ?? (pos?.right ? 'none' : 'translateX(-50%) scale(0.96)');
+
+  await page.evaluate(
+    ({ titleStr, sTop, sLeft, sRight, sWidth, sHeight, sTransform }) => {
+      const ind = document.getElementById('win11-notepad-indicator');
       if (ind) ind.style.background = '#60a5fa';
 
-      var existing = document.getElementById('win11-notepad-overlay');
+      const existing = document.getElementById('win11-notepad-overlay');
       if (existing) existing.remove();
 
-      var np = document.createElement('div');
+      const np = document.createElement('div');
       np.id = 'win11-notepad-overlay';
-      np.style.cssText = 'position:fixed!important;top:140px!important;left:50%!important;transform:translateX(-50%) scale(0.96)!important;opacity:0!important;width:760px!important;height:360px!important;background:#202020!important;border:1px solid rgba(255,255,255,0.15)!important;border-radius:8px!important;box-shadow:0 24px 60px rgba(0,0,0,0.85),0 0 0 1px rgba(255,255,255,0.08)!important;z-index:2147483640!important;display:flex!important;flex-direction:column!important;font-family:Segoe UI,sans-serif!important;overflow:hidden!important;transition:all 0.4s cubic-bezier(0.16,1,0.3,1)!important;';
+      np.style.cssText = `position:fixed!important;top:${sTop}!important;left:${sLeft}!important;right:${sRight}!important;transform:${sTransform}!important;opacity:0!important;width:${sWidth}!important;height:${sHeight}!important;background:#202020!important;border:1px solid rgba(255,255,255,0.18)!important;border-radius:10px!important;box-shadow:0 24px 60px rgba(0,0,0,0.9),0 0 0 1px rgba(255,255,255,0.1)!important;z-index:2147483640!important;display:flex!important;flex-direction:column!important;font-family:Segoe UI,sans-serif!important;overflow:hidden!important;transition:all 0.35s cubic-bezier(0.16,1,0.3,1)!important;`;
 
       np.innerHTML = [
-        // Titlebar
         '<div style="height:38px;background:#2b2b2b;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,0.08);user-select:none;">',
         '  <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e5e5e5;font-weight:500;">',
         '    <svg width="16" height="16" viewBox="0 0 24 24" fill="#60a5fa"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>',
-        '    <span>' + ${JSON.stringify(title)} + ' - Notepad</span>',
+        '    <span>' + titleStr + ' - Notepad</span>',
         '  </div>',
         '  <div style="display:flex;align-items:center;gap:12px;color:#a3a3a3;font-size:11px;">',
-        '    <span>&#x2500;</span><span>&#x25A1;</span><span style="color:#ef4444;font-size:13px;font-weight:bold;">&#x2715;</span>',
+        '    <span>&#x2500;</span><span>&#x25A1;</span><span id="win11-notepad-close-btn" style="color:#ef4444;font-size:13px;font-weight:bold;cursor:pointer;">&#x2715;</span>',
         '  </div>',
         '</div>',
-        // Menu Bar
         '<div style="height:26px;background:#202020;display:flex;align-items:center;gap:16px;padding:0 14px;font-size:11px;color:#a3a3a3;border-bottom:1px solid rgba(255,255,255,0.06);user-select:none;">',
         '  <span>File</span><span>Edit</span><span>View</span>',
         '</div>',
-        // Text Content Area
-        '<div id="notepad-content-body" style="flex:1;padding:18px;background:#1e1e1e;color:#f3f3f3;font-family:Consolas,Courier New,monospace;font-size:14px;line-height:1.7;white-space:pre-wrap;overflow-y:auto;"></div>'
+        '<div id="notepad-content-body" style="flex:1;padding:16px;background:#1e1e1e;color:#f3f3f3;font-family:Consolas,Courier New,monospace;font-size:13.5px;line-height:1.65;white-space:pre-wrap;overflow-y:auto;"></div>',
       ].join('');
 
       document.documentElement.appendChild(np);
 
-      // Trigger smooth transition
-      setTimeout(function() {
+      setTimeout(() => {
         np.style.opacity = '1';
-        np.style.transform = 'translateX(-50%) scale(1)';
-      }, 30);
-    })()
-  `);
-
-  await sleep(600);
-
-  // Move mouse up into Notepad text area and click to place cursor
-  await humanGlide(page, 960, 260, 22);
-  await humanClick(page);
-  await sleep(400);
-
-  // Type plain unformatted text with human cadence
-  const fullText = textLines.join('\n');
-  for (let i = 0; i < fullText.length; i++) {
-    const char = fullText[i];
-    await page.evaluate(`
-      (function() {
-        var el = document.getElementById('notepad-content-body');
-        if (el) {
-          el.textContent = ${JSON.stringify(fullText.slice(0, i + 1))} + ' |';
+        if (sRight !== 'auto') {
+          np.style.transform = 'none';
+        } else {
+          np.style.transform = 'translateX(-50%) scale(1)';
         }
-      })()
-    `);
+      }, 30);
+    },
+    {
+      titleStr: title,
+      sTop: top,
+      sLeft: left,
+      sRight: right,
+      sWidth: width,
+      sHeight: height,
+      sTransform: transform,
+    },
+  );
 
-    // Natural variable delay based on character type and human rhythm
-    let delay = 60 + Math.floor(Math.random() * 45); // 60ms - 105ms base keystroke
+  await sleep(500);
+}
 
-    if (char === '\n') {
-      delay = 380 + Math.floor(Math.random() * 140); // Newline thought pause: 380-520ms
-    } else if (char === '.' || char === ':' || char === '!' || char === '?') {
-      delay = 280 + Math.floor(Math.random() * 120); // Sentence boundary pause: 280-400ms
-    } else if (char === ',' || char === ';') {
-      delay = 180 + Math.floor(Math.random() * 80); // Clause pause: 180-260ms
-    } else if (char === ' ') {
-      delay = 85 + Math.floor(Math.random() * 35); // Word boundary: 85-120ms
-    } else if (Math.random() < 0.035) {
-      delay = 240 + Math.floor(Math.random() * 160); // Occasional thinking hesitation
-    }
+/** Types new lines of text into the active Notepad body with realistic keystroke delay */
+export async function typeInNotepad(
+  page: Page,
+  newLines: string[],
+  focusX = 1560,
+  focusY = 320,
+): Promise<void> {
+  // Move cursor into Notepad body and click to focus
+  await humanGlide(page, focusX, focusY, 20);
+  await humanClick(page);
+  await sleep(250);
+
+  const textToAdd = newLines.join('\n');
+
+  for (let i = 0; i < textToAdd.length; i++) {
+    const char = textToAdd[i];
+
+    await page.evaluate(
+      ({ nextChar }) => {
+        const el = document.getElementById('notepad-content-body');
+        if (el) {
+          // If ends with ' |', replace caret with next character
+          if (el.textContent?.endsWith(' |')) {
+            el.textContent = el.textContent.slice(0, -2) + nextChar + ' |';
+          } else {
+            el.textContent = (el.textContent || '') + nextChar + ' |';
+          }
+          el.scrollTop = el.scrollHeight;
+        }
+      },
+      { nextChar: char },
+    );
+
+    let delay = 35 + Math.floor(Math.random() * 30); // 35-65ms typing rhythm
+    if (char === '\n') delay = 220 + Math.floor(Math.random() * 80);
+    else if (char === '.' || char === ':' || char === '-') delay = 140 + Math.floor(Math.random() * 50);
+    else if (char === ' ') delay = 50 + Math.floor(Math.random() * 20);
 
     await sleep(delay);
   }
 
-  // Remove blinking caret at the end
-  await page.evaluate(`
-    (function() {
-      var el = document.getElementById('notepad-content-body');
-      if (el) {
-        el.textContent = ${JSON.stringify(fullText)};
-      }
-    })()
-  `);
+  // Remove trailing caret
+  await page.evaluate(() => {
+    const el = document.getElementById('notepad-content-body');
+    if (el && el.textContent?.endsWith(' |')) {
+      el.textContent = el.textContent.slice(0, -2);
+    }
+  });
 
-  await sleep(4500);
+  await sleep(300);
+}
+
+/** Standard full-cycle note (open, type all, wait, close) */
+export async function showNotepadNote(
+  page: Page,
+  title: string,
+  textLines: string[],
+): Promise<void> {
+  await openNotepadWindow(page, title);
+  await typeInNotepad(page, textLines, 960, 260);
+  await sleep(4000);
+}
+
+/** Smoothly closes the Notepad overlay and dims the taskbar indicator */
+export async function closeNotepadNote(page: Page): Promise<void> {
+  console.log(`📝 Closing Notepad overlay...`);
+  await page.evaluate(() => {
+    const ind = document.getElementById('win11-notepad-indicator');
+    if (ind) ind.style.background = 'transparent';
+
+    const np = document.getElementById('win11-notepad-overlay');
+    if (np) {
+      np.style.opacity = '0';
+      np.style.transform = 'scale(0.96)';
+      setTimeout(() => {
+        np.remove();
+      }, 350);
+    }
+  });
+  await sleep(400);
 }

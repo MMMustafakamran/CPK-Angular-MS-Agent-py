@@ -4,7 +4,7 @@ Guide for porting/adapting the **3-step automated recording engine** to any proj
 
 **Official Doc → Standalone VS Code → Live Demo**
 
-Includes interactive Taskbar, human cursor, dynamic AI token-stream detection, Angular signal & zoneless compatibility, and service diagnostics.
+Includes interactive Taskbar, human cursor, dynamic AI token-stream detection, Angular signal & zoneless compatibility, file attachment flow, Windows 11 Notepad developer overlays, and service diagnostics.
 
 ## Architecture & Decoupling
 
@@ -95,23 +95,72 @@ In this Angular + Microsoft Agent Framework harness:
 
 Each `PageRecordConfig` defines:
 
-| Field               | Purpose                                                  |
-| ------------------- | -------------------------------------------------------- |
-| `id`                | Unique CLI ID used by `--page=<id>`                      |
-| `name`              | Clean feature title                                      |
-| `filename`          | Exported video filename, e.g. `MSPY-angular-01-Quickstart` |
-| `docUrl`            | Official documentation URL for Step 1                    |
-| `demoUrl`           | Local Step 3 URL, e.g. `http://localhost:4200/quickstart/demo` |
-| `ideFile`           | Source file highlighted in Step 2                        |
-| `startLine`, `endLine` | VS Code highlighted range                             |
-| `prompt`            | Prompt typed in Step 3                                   |
-| `waitAfterPromptMs` | Post-stream reading pause                                |
+| Field               | Purpose                                                            |
+| ------------------- | ------------------------------------------------------------------ |
+| `id`                | Unique CLI ID used by `--page=<id>`                                |
+| `name`              | Clean feature title                                                |
+| `filename`          | Exported video filename: `MSPY-angular - <NN><FeatureName>`        |
+| `docUrl`            | Official documentation URL for Step 1                              |
+| `demoUrl`           | Local Step 3 URL, e.g. `http://localhost:4200/quickstart/demo`       |
+| `ideFile`           | Source file highlighted in Step 2                                  |
+| `startLine`, `endLine` | VS Code highlighted range                                       |
+| `prompt`            | Prompt typed in Step 3                                             |
+| `waitAfterPromptMs` | Post-stream reading pause (default `4000` ms)                      |
 
 ---
 
-## Step 4 — Active Token-Stream Stability & Response Detection
+## Step 4 — Specialized Action Handlers
 
-Do **not** rely on fixed timers or brittle spinner selectors. Use `waitForAgentResponseCompletion()` with text-stability polling.
+Custom action modules in `autorecord/recorder/actions/`:
+
+1. **`attachments.action.ts`**:
+   - Glides cursor to the `+` button (`button[aria-label="Add photos or files"]`).
+   - Clicks to open the Angular CDK Menu and clicks `Add photos or files`.
+   - Injects `sample_chart.png` via `DataTransfer` on `input[type="file"]` and dispatches `change`.
+   - Showcases the `<copilot-chat-attachment-queue>` preview thumbnail chip.
+   - Re-measures the shifted textarea position, types prompt, dispatches the input signal, and clicks Send.
+
+2. **`voice.action.ts`**:
+   - Strictly locates `button[aria-label="Transcribe"]` (microphone button next to Send).
+   - Glides cursor and clicks the voice recorder button.
+   - Slides up Windows 11 **Notepad** and types the developer note:
+     ```text
+     NOTE: Voice & Audio Transcription
+
+     - voice works on browser but no tts implemented in the server file thus not working
+     ```
+   - Closes Notepad and completes recording.
+
+3. **`threads.action.ts`**:
+   - Showcases the Headless thread list (`app-thread-list` on `injectThreads`) and `CopilotThreadsDrawer`.
+   - Slides up Windows 11 **Notepad** and types the developer note:
+     ```text
+     NOTE: Threads & Cloud Authentication
+
+     - the project isnt authenticated by the copilotkit cloud via browser as the initial setup wasnt done through copilotkit cli
+     ```
+   - Closes Notepad and completes recording.
+
+4. **`chat-ui.action.ts`**:
+   - Cycles across 4 tabs: Inline Chat (custom scoped styling) → Custom Assistant Message → CopilotPopup → CopilotSidebar.
+
+5. **`tools.action.ts`**:
+   - Triggers `getWeather` server tool rendering `WeatherCardComponent` and `change_background` client tool.
+
+6. **`hitl.action.ts`**:
+   - Detects `ApprovalCardComponent` decision gate, glides cursor to "Approve" button, and clicks it.
+
+7. **`shared-state.action.ts`**:
+   - Clicks "Mark high priority" in `WorkspaceComponent`, verifies reactive agent state context.
+
+8. **`headless-ui.action.ts`**:
+   - Types into custom `<textarea>` composer and detects custom `<article data-role="assistant">` transcript.
+
+---
+
+## Step 5 — Active Token-Stream Stability & Response Detection
+
+Do **not** rely on fixed timers or brittle spinner selectors. Use `waitForAgentResponseCompletion(page, 4000)` with text-stability polling.
 
 Behavior:
 1. Wait up to **30s** for an assistant message or generative UI component (`app-weather-card`, `app-approval-card`) to begin receiving content.
@@ -121,11 +170,11 @@ Behavior:
 5. **4 consecutive identical checks = 2 seconds of stability = streaming complete.**
 6. Log completion with character count.
 7. Glide cursor over the completed assistant response or tool card.
-8. Pause `postWaitMs` for comfortable reading.
+8. Pause **4 seconds** for comfortable reading.
 
 ---
 
-## Step 5 — Running the Suite
+## Step 6 — Running the Suite
 
 ```bash
 cd autorecord
@@ -134,12 +183,15 @@ cd autorecord
 npm run record -- --page=quickstart
 npm run record -- --page=chat-ui
 npm run record -- --page=frontend-tools-generative-ui
+npm run record -- --page=voice-multimodal
 npm run record -- --page=human-in-the-loop
 npm run record -- --page=shared-state
+npm run record -- --page=threads
+npm run record -- --page=attachments
 npm run record -- --page=headless
 
 # All registered routes
 npm run record
 ```
 
-Videos are exported to `autorecord/videos/` as **1080p, 60fps WebM** files (`MSPY-angular-*.webm`).
+Videos are exported to `autorecord/videos/` as **1080p, 60fps WebM** files (`MSPY-angular - <NN><FeatureName>.webm`).
