@@ -153,26 +153,60 @@ npm start          # Starts Angular Dev Server on http://localhost:4200
 
 #### 3. Automated Screen Recording & Demonstration Suite
 
+Lives in [autorecorder/](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/autorecorder) — a portable suite shared across CopilotKit
+framework repos and adapted to this one through `config/` and `actions/` only.
+See [autorecorder/README.md](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/autorecorder/README.md) for the full contract; it replaces the earlier
+`frontend/scripts/record-all-pages.ts`.
+
+Each of the 11 pages gets one video in three steps: the official doc page, a
+simulated VS Code showing this repo's own source at the relevant lines, then the
+chrome-free `/demo` route driven live.
+
 Once the backend (`8200`), runtime (`8201`), and frontend dev server (`4200`) are running:
 
 ```bash
-cd frontend
+cd autorecorder
+npm install
+npx playwright install chromium
 
-# Record all 11 pages in sequence
+npm run doctor            # validate the configuration (exits 1 on error)
+npm run doctor:online     # also probe every doc/demo URL and the selectors
+npm run record -- --list  # what will be recorded
+
+# Record all 11 pages in nav order
 npm run record
 
 # Record a specific page individually
-npm run record -- --page=quickstart
+npm run record -- --quickstart
 npm run record -- --page=chat-ui
-npm run record -- --page=frontend-tools-generative-ui
-npm run record -- --page=a2ui
-npm run record -- --page=voice-multimodal
-npm run record -- --page=human-in-the-loop
-npm run record -- --page=shared-state
-npm run record -- --page=threads
-npm run record -- --page=memory
-npm run record -- --page=attachments
-npm run record -- --page=headless
+npm run record -- --filter=threads
 ```
 
-Recordings are saved to `frontend/recordings/<page_id>.webm`.
+Recordings are saved to `autorecorder/videos/MSPY-angular-<NN>-<Name>.webm`.
+That folder is gitignored: videos are build output, and the previous recorder's
+committed clips in `frontend/recordings/` had grown to 51MB.
+
+---
+
+### Upgrading Packages
+
+#### Frontend
+
+```bash
+cd frontend
+# Check and update dependencies in package.json to latest versions
+npx npm-check-updates -u
+# Install updated dependencies
+npm install
+```
+
+#### Backend
+
+```bash
+cd backend
+# Upgrade all locked dependencies in uv.lock
+uv lock --upgrade
+# Sync the virtual environment with the updated lockfile
+uv sync
+```
+

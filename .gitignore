@@ -10,8 +10,16 @@ tmp/
 out-tsc/
 .angular/
 
-# Playwright & Temp Chunks
-autorecord/videos/.temp_chunks/
+# Recorder output. Videos are build output -- reproducible from autorecorder/
+# plus `npm run record` -- and committing them is expensive: the previous
+# recorder's 13 clips in frontend/recordings/ were 51MB of tracked binaries,
+# rewritten on every re-record. Publish them as release assets or to a bucket.
+#
+# Only the clips. `autorecorder/videos/` also holds manifest.json and
+# MANIFEST.md, which `npm run manifest` writes and which are *meant* to be
+# committed -- their diff is the only record of what a run changed, since the
+# clips themselves are not in git. Ignoring the whole directory hid them.
+autorecorder/videos/*.webm
 .temp_chunks/
 
 # Logs & OS

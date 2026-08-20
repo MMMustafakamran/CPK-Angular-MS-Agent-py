@@ -1,0 +1,298 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  ADAPT THIS FILE — 3 of 3
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * One entry per doc page, in the order the doc nav lists them.
+ *
+ * Entries are deliberately short. `docUrl`, `demoUrl` and the output filename
+ * are derived from `project.config.ts` plus the fields below, so no entry can
+ * point at the wrong framework's docs and filenames stay in nav order without
+ * anyone numbering them by hand.
+ *
+ * Adapting means: delete the pages this framework does not document, add the
+ * ones it does, and fix the line ranges. `npm run doctor` then tells you which
+ * ranges no longer point at real code.
+ *
+ * ── Scope, for this repo ───────────────────────────────────────────────────
+ * `route` + `demoSuffix` is the only demo URL a page can have, and the doctor
+ * errors on any that is not 200. This app's nav lists 12 doc routes; the
+ * Introduction landing page (`/`) is the one without a `/demo` of its own —
+ * `demoPath()` in nav-config.ts returns undefined for it — so it is deliberately
+ * absent below rather than registered and broken. `/status` is app furniture
+ * rather than a doc page, and is likewise absent.
+ *
+ * Everything here mirrors `frontend/src/app/lib/nav-config.ts`, the app's single
+ * source of truth for route -> doc-page mapping. `docPath` is that file's
+ * `docPath` minus its leading `/angular/ms-agent-python`. Four routes (threads,
+ * memory, attachments, headless) repeat one `docPath` because the Angular docs
+ * cover all four topics on a single page — that is the doc's shape, not a
+ * copy/paste slip.
+ *
+ * ── The line ranges ────────────────────────────────────────────────────────
+ * `startLine`/`endLine` are what the simulated IDE highlights. They are
+ * hardcoded, so they drift the moment someone edits a demo component. Doctor
+ * guards ranges in files carrying `[!code highlight]` or `#region` markers.
+ * This frontend uses neither: it brackets each documented snippet with
+ * `// <topic> : <snippet name> start|end` line comments, which
+ * frontend/scripts/generate-sources.ts reads. Every range below was set from
+ * those brackets by hand, so `npm run doctor` proves a range is in-bounds, not
+ * that it still frames the snippet the page is about — re-read them after
+ * editing a feature component. Teaching the doctor this repo's marker syntax
+ * would restore the guard, but that is a `core/` change and therefore a finding
+ * to report, not something to do here.
+ */
+
+import { definePages } from '../core/types';
+
+export const PAGES = definePages([
+  {
+    id: 'quickstart',
+    name: 'Quickstart',
+    videoName: 'Quickstart',
+    docPath: 'quickstart',
+    route: 'quickstart',
+    // Dependency manifest first, always: a demo means nothing without the
+    // versions it ran against, and @copilotkit/angular is a 0.x package that
+    // moves faster than its docs do. The range is the whole `dependencies`
+    // block, so @copilotkit/angular, @copilotkit/runtime and @ag-ui/client are
+    // legible in one frame.
+    ideFile: 'frontend/package.json',
+    startLine: 19,
+    endLine: 36,
+    // Then the path itself, in the order a request travels it: the chat
+    // component, the Node process hosting the runtime (Angular has no server
+    // route to host it in), and the Agent Framework endpoint it proxies to.
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/features/quickstart/quickstart-chat.ts',
+        startLine: 1,
+        endLine: 15,
+      },
+      // `quickstart : copilot runtime start|end` — the HttpAgent bindings.
+      { filePath: 'frontend/server.ts', startLine: 29, endLine: 44 },
+      // `quickstart : expose agent framework endpoint start|end`, with the
+      // FastAPI app it is mounted on.
+      { filePath: 'backend/main.py', startLine: 93, endLine: 108 },
+    ],
+    prompt: 'Can you tell me a joke?',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'chat-ui',
+    name: 'Guides - Chat UI and customization',
+    videoName: 'ChatUi',
+    docPath: 'guides/chat-ui',
+    route: 'chat-ui',
+    ideFile: 'frontend/src/app/features/chat-ui/chat-ui-demo.component.ts',
+    startLine: 28,
+    endLine: 56,
+    // The replaced assistant message is the guide's actual lesson; the wrapper
+    // above only chooses which surface is mounted.
+    // `chat ui : replace an assistant message start|end`.
+    extraTabs: [
+      {
+        filePath:
+          'frontend/src/app/features/chat-ui/custom-assistant-message.component.ts',
+        startLine: 15,
+        endLine: 27,
+      },
+    ],
+    // Four surfaces, driven in order by the handler: inline, custom assistant
+    // message, popup, sidebar. Only the first two take a prompt.
+    prompt: 'What is CopilotKit?',
+    prompts: [
+      'What is CopilotKit?',
+      'Tell me what makes your custom assistant layout unique.',
+    ],
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'frontend-tools-generative-ui',
+    name: 'Guides - Frontend tools and generative UI',
+    videoName: 'FrontendToolsGenerativeUi',
+    docPath: 'guides/frontend-tools-generative-ui',
+    route: 'frontend-tools-generative-ui',
+    // The constructor is the lesson: `registerRenderToolCall` for the
+    // server-side tool, `registerFrontendTool` for the browser-side one.
+    ideFile: 'frontend/src/app/features/tools/tools-chat.component.ts',
+    startLine: 49,
+    endLine: 66,
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/features/tools/weather-card.component.ts',
+        startLine: 12,
+        endLine: 29,
+      },
+      // The other half of the pair: getWeather runs in the Agent Framework
+      // process and the browser only renders the call.
+      // `frontend tools : server tool getWeather start|end`.
+      { filePath: 'backend/main.py', startLine: 34, endLine: 41 },
+    ],
+    // Two turns: a server-side tool the browser only renders, then a frontend
+    // tool whose result is the page itself repainting.
+    prompt: "What's the weather in Tokyo?",
+    prompts: ["What's the weather in Tokyo?", 'Change the background to violet'],
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'a2ui',
+    name: 'Guides - A2UI schemas, styling, and recovery',
+    videoName: 'A2ui',
+    docPath: 'guides/a2ui',
+    route: 'a2ui',
+    ideFile: 'frontend/src/app/features/a2ui/a2ui-chat.component.ts',
+    startLine: 1,
+    endLine: 24,
+    // `a2ui : enable a2ui middleware start|end`, shown in the runtime it is set
+    // on. Nothing component-level enables A2UI; that one line does.
+    extraTabs: [{ filePath: 'frontend/server.ts', startLine: 33, endLine: 43 }],
+    // Recorded as a documented finding rather than a working demo: the renderer
+    // only registers once `a2ui.catalog` is supplied, and the guide's catalog
+    // snippet is not self-contained. The handler sends the prompt, then writes
+    // the gaps up in Notepad — see actions/a2ui.action.ts, and the `partial`
+    // status note on this route in nav-config.ts.
+    prompt: 'Show me a card comparing two flight options.',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'voice-multimodal',
+    name: 'Guides - Voice and multimodal input',
+    videoName: 'VoiceMultimodal',
+    docPath: 'guides/voice-multimodal',
+    route: 'voice-multimodal',
+    // `voice & multimodal : configure attachments start|end` plus the component
+    // that binds it — the microphone control itself needs no option.
+    ideFile: 'frontend/src/app/features/media/voice-chat.component.ts',
+    startLine: 12,
+    endLine: 31,
+    // The microphone records; this runtime configures no transcription service,
+    // so transcription fails by design. The handler shows that and says so.
+    prompt: 'Tell me what you can do with images and voice.',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'human-in-the-loop',
+    name: 'Guides - Human-in-the-loop and interrupts',
+    videoName: 'HumanInTheLoop',
+    docPath: 'guides/human-in-the-loop',
+    route: 'human-in-the-loop',
+    // The registration is the lesson; the card is what the viewer clicks.
+    ideFile: 'frontend/src/app/features/hitl/approval-tools.service.ts',
+    startLine: 15,
+    endLine: 30,
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/features/hitl/approval-card.component.ts',
+        startLine: 18,
+        endLine: 41,
+      },
+    ],
+    prompt: 'Delete my account, but ask me to approve it first.',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'shared-state',
+    name: 'Guides - Shared state and agent context',
+    videoName: 'SharedState',
+    docPath: 'guides/shared-state',
+    route: 'shared-state',
+    ideFile: 'frontend/src/app/features/shared-state/workspace.component.ts',
+    startLine: 21,
+    endLine: 50,
+    extraTabs: [
+      {
+        filePath:
+          'frontend/src/app/features/shared-state/account-context.component.ts',
+        startLine: 11,
+        endLine: 33,
+      },
+      // The agent side of the same feature: STATE_SCHEMA and
+      // PREDICT_STATE_CONFIG are what make state two-way rather than a
+      // browser-only signal.
+      // `shared state : state schema start|end`.
+      { filePath: 'backend/main.py', startLine: 21, endLine: 32 },
+    ],
+    // Both halves of the guide in one question: `priority` is agent *state*,
+    // written from the browser by the handler before it prompts;
+    // `userName`/`timezone` are read-only *context*. The notes array is always
+    // empty here, so it is deliberately not asked about — the agent would have
+    // nothing to be right or wrong about.
+    prompt:
+      'What is my username and timezone, and what priority is my workspace set to?',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'threads',
+    name: 'Threads',
+    videoName: 'Threads',
+    docPath: 'guides/threads-memory-attachments-headless',
+    route: 'threads',
+    ideFile: 'frontend/src/app/features/threads/thread-list.component.ts',
+    startLine: 10,
+    endLine: 44,
+    extraTabs: [
+      // The drop-in half of the guide: CopilotThreadsDrawer beside a chat,
+      // under one provideCopilotChatConfiguration.
+      {
+        filePath: 'frontend/src/app/features/threads/conversations.component.ts',
+        startLine: 8,
+        endLine: 25,
+      },
+      {
+        filePath: 'frontend/src/app/features/threads/threads-demo.component.ts',
+        startLine: 10,
+        endLine: 34,
+      },
+    ],
+    // Thread endpoints are licensed. Unlicensed, the hand-built list stays empty
+    // and the drawer renders its locked state — which is the expected result,
+    // and what this recording documents. The chat beside it answers normally.
+    prompt: 'Give me a one-line summary of what threads are for.',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'memory',
+    name: 'Memory',
+    videoName: 'Memory',
+    docPath: 'guides/threads-memory-attachments-headless',
+    route: 'memory',
+    // isAvailable() is false against this runtime, so the guide's fallback is
+    // what renders. The handler rests on it before prompting the chat beside it.
+    ideFile: 'frontend/src/app/features/memory/memory-list.component.ts',
+    startLine: 12,
+    endLine: 34,
+    prompt: 'Remember that I am working on an Angular 22 project.',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'attachments',
+    name: 'Attachments',
+    videoName: 'Attachments',
+    docPath: 'guides/threads-memory-attachments-headless',
+    route: 'attachments',
+    // `attachments : enable attachments` and the config block inside it.
+    ideFile: 'frontend/src/app/features/attachments/media-chat.component.ts',
+    startLine: 11,
+    endLine: 27,
+    // Asks for two values that exist only inside the attached image, so a
+    // correct answer is proof the file reached the model. A generic "what types
+    // of attachments are supported?" could be answered from the system prompt
+    // alone, which is how a broken upload comes to look fine on video.
+    prompt:
+      'Read the attached chart. What is its title, and what is the Q4 value?',
+    waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'headless',
+    name: 'Headless UI',
+    videoName: 'HeadlessUi',
+    docPath: 'guides/threads-memory-attachments-headless',
+    route: 'headless',
+    ideFile: 'frontend/src/app/features/headless/headless-chat.component.ts',
+    startLine: 12,
+    endLine: 65,
+    prompt: 'Tell me a short joke about Angular.',
+    waitAfterPromptMs: 4000,
+  },
+]);
