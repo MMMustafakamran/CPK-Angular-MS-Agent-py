@@ -48,12 +48,10 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   quickstart: runStandardAction,
   'chat-ui': runChatUiAction,
   'frontend-tools-generative-ui': runToolsAction,
-  a2ui: runA2uiAction,
   'voice-multimodal': runVoiceAction,
   'human-in-the-loop': runHitlAction,
   'shared-state': runSharedStateAction,
   threads: runThreadsAction,
-  memory: runMemoryAction,
   attachments: runAttachmentsAction,
   headless: runHeadlessAction,
 };

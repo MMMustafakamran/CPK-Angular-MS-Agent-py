@@ -3,20 +3,14 @@
  *
  * https://docs.copilotkit.ai/angular/ms-agent-python/guides/shared-state
  *
- * Two browser-side writes happen before the prompt, and both are what make the
- * answer evidence rather than a plausible sentence:
- *
- * - "Mark high priority" writes agent *state*, so "high" can only come back if
- *   the write reached the agent.
- * - "Use London time" changes a signal the read-only *context* accessor reads,
- *   so "Europe/London" can only come back if the context re-registered.
- *
- * The prompt deliberately does not ask about `notes`: that array is always empty
- * in this demo, so it gave the agent nothing to be right or wrong about.
+ * Multi-turn demonstration:
+ * 1. Click "Mark high priority" -> Ask "what is priority set as?"
+ * 2. Click "Mark low priority"  -> Ask "what is priority set as?"
+ * 3. Click "Use London time"    -> Ask "what is my timezone?"
  */
 import { type Page } from 'playwright';
 
-import { sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
+import { promptsFor, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../core/types';
 
@@ -24,46 +18,81 @@ export const runSharedStateAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
 ) => {
-  console.log(`   🔄 Writing state from the browser first...`);
-  const priorityBtn = page
+  const [
+    highPrompt = 'what is priority set as?',
+    lowPrompt = 'what is priority set as?',
+    tzPrompt = 'what is my timezone?',
+  ] = promptsFor(config);
+  const wait = config.waitAfterPromptMs ?? 4000;
+
+  // ── Turn 1: Mark High Priority ─────────────────────────────────────────────
+  console.log(`   🔄 Step 1: Clicking "Mark high priority"...`);
+  const highBtn = page
     .locator('app-workspace button:has-text("Mark high priority")')
     .first();
 
-  const btnBox = await priorityBtn.boundingBox().catch(() => null);
-  if (btnBox) {
-    await humanGlide(page, btnBox.x + btnBox.width / 2, btnBox.y + btnBox.height / 2, 20);
+  const highBox = await highBtn.boundingBox().catch(() => null);
+  if (highBox) {
+    await humanGlide(page, highBox.x + highBox.width / 2, highBox.y + highBox.height / 2, 20);
     await sleep(400);
     await humanClick(page);
     await sleep(1000);
   } else {
-    console.warn(`   ⚠️ "Mark high priority" not found — the agent will read the default state.`);
+    console.warn(`   ⚠️ "Mark high priority" button not found.`);
   }
 
-  // Second write: a signal the context accessor reads, so the re-registration
-  // is observable in the same answer.
+  console.log(`   💬 Turn 1: ${highPrompt}`);
+  const count1 = await sendPrompt(page, highPrompt);
+  await waitForAgentResponseCompletion(page, wait, count1);
+  await sleep(1000);
+
+  // ── Turn 2: Mark Low Priority ──────────────────────────────────────────────
+  console.log(`   🔄 Step 2: Clicking "Mark low priority"...`);
+  const lowBtn = page
+    .locator('app-workspace button:has-text("Mark low priority")')
+    .first();
+
+  const lowBox = await lowBtn.boundingBox().catch(() => null);
+  if (lowBox) {
+    await humanGlide(page, lowBox.x + lowBox.width / 2, lowBox.y + lowBox.height / 2, 20);
+    await sleep(400);
+    await humanClick(page);
+    await sleep(1000);
+  } else {
+    console.warn(`   ⚠️ "Mark low priority" button not found.`);
+  }
+
+  console.log(`   💬 Turn 2: ${lowPrompt}`);
+  const count2 = await sendPrompt(page, lowPrompt);
+  await waitForAgentResponseCompletion(page, wait, count2);
+  await sleep(1000);
+
+  // ── Turn 3: Timezone Context ───────────────────────────────────────────────
   const timezoneBtn = page
     .locator('app-account-context button:has-text("Use London time")')
     .first();
   const tzBox = await timezoneBtn.boundingBox().catch(() => null);
   if (tzBox) {
-    console.log(`   🌍 Switching the account timezone to Europe/London...`);
+    console.log(`   🌍 Step 3: Clicking "Use London time"...`);
     await humanGlide(page, tzBox.x + tzBox.width / 2, tzBox.y + tzBox.height / 2, 20);
     await sleep(400);
     await humanClick(page);
     await sleep(1000);
   } else {
-    console.warn(`   ⚠️ "Use London time" not found — the agent will read the default timezone.`);
+    console.warn(`   ⚠️ "Use London time" button not found.`);
   }
 
-  const msgCount = await sendPrompt(page, config.prompt);
-  await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 4000, msgCount);
+  console.log(`   💬 Turn 3: ${tzPrompt}`);
+  const count3 = await sendPrompt(page, tzPrompt);
+  await waitForAgentResponseCompletion(page, wait, count3);
 
-  // Rest on the context panel the answer just quoted back.
+  // Rest on the context & state panel
   const accountContext = page.locator('app-account-context').first();
   const ctxBox = await accountContext.boundingBox().catch(() => null);
   if (ctxBox) {
-    console.log(`   🎯 Resting on the read-only context components.`);
+    console.log(`   🎯 Resting on the read-only context component.`);
     await humanGlide(page, ctxBox.x + ctxBox.width / 2, ctxBox.y + ctxBox.height / 2, 22);
     await sleep(1500);
   }
 };
+

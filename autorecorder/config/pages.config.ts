@@ -135,26 +135,7 @@ export const PAGES = definePages([
     prompts: ["What's the weather in Tokyo?", 'Change the background to violet'],
     waitAfterPromptMs: 4000,
   },
-  {
-    id: 'a2ui',
-    name: 'Guides - A2UI schemas, styling, and recovery',
-    videoName: 'A2ui',
-    docPath: 'guides/a2ui',
-    route: 'a2ui',
-    ideFile: 'frontend/src/app/features/a2ui/a2ui-chat.component.ts',
-    startLine: 1,
-    endLine: 24,
-    // `a2ui : enable a2ui middleware start|end`, shown in the runtime it is set
-    // on. Nothing component-level enables A2UI; that one line does.
-    extraTabs: [{ filePath: 'frontend/server.ts', startLine: 33, endLine: 43 }],
-    // Recorded as a documented finding rather than a working demo: the renderer
-    // only registers once `a2ui.catalog` is supplied, and the guide's catalog
-    // snippet is not self-contained. The handler sends the prompt, then writes
-    // the gaps up in Notepad — see actions/a2ui.action.ts, and the `partial`
-    // status note on this route in nav-config.ts.
-    prompt: 'Show me a card comparing two flight options.',
-    waitAfterPromptMs: 4000,
-  },
+
   {
     id: 'voice-multimodal',
     name: 'Guides - Voice and multimodal input',
@@ -213,13 +194,12 @@ export const PAGES = definePages([
       // `shared state : state schema start|end`.
       { filePath: 'backend/main.py', startLine: 21, endLine: 32 },
     ],
-    // Both halves of the guide in one question: `priority` is agent *state*,
-    // written from the browser by the handler before it prompts;
-    // `userName`/`timezone` are read-only *context*. The notes array is always
-    // empty here, so it is deliberately not asked about — the agent would have
-    // nothing to be right or wrong about.
-    prompt:
-      'What is my username and timezone, and what priority is my workspace set to?',
+    prompt: 'what is priority set as?',
+    prompts: [
+      'what is priority set as?',
+      'what is priority set as?',
+      'what is my timezone?',
+    ],
     waitAfterPromptMs: 4000,
   },
   {
@@ -251,20 +231,7 @@ export const PAGES = definePages([
     prompt: 'Give me a one-line summary of what threads are for.',
     waitAfterPromptMs: 4000,
   },
-  {
-    id: 'memory',
-    name: 'Memory',
-    videoName: 'Memory',
-    docPath: 'guides/threads-memory-attachments-headless',
-    route: 'memory',
-    // isAvailable() is false against this runtime, so the guide's fallback is
-    // what renders. The handler rests on it before prompting the chat beside it.
-    ideFile: 'frontend/src/app/features/memory/memory-list.component.ts',
-    startLine: 12,
-    endLine: 34,
-    prompt: 'Remember that I am working on an Angular 22 project.',
-    waitAfterPromptMs: 4000,
-  },
+
   {
     id: 'attachments',
     name: 'Attachments',
