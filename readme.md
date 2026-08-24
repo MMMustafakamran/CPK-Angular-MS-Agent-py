@@ -148,7 +148,7 @@ npm run dev
 
 # Option B: Run separately
 npm run runtime    # Starts Copilot Runtime on http://localhost:8201
-npm start          # Starts Angular Dev Server on http://localhost:4200
+npm start          # Starts Angular Dev Server on http://localhost:4202
 ```
 
 #### 3. Automated Screen Recording & Demonstration Suite
@@ -162,7 +162,7 @@ Each of the 11 pages gets one video in three steps: the official doc page, a
 simulated VS Code showing this repo's own source at the relevant lines, then the
 chrome-free `/demo` route driven live.
 
-Once the backend (`8200`), runtime (`8201`), and frontend dev server (`4200`) are running:
+Once the backend (`8200`), runtime (`8201`), and frontend dev server (`4202`) are running:
 
 ```bash
 cd autorecorder
@@ -190,23 +190,30 @@ committed clips in `frontend/recordings/` had grown to 51MB.
 
 ### Upgrading Packages
 
-#### Frontend
+#### 1. Frontend (Angular / npm)
 
-```bash
-cd frontend
-# Check and update dependencies in package.json to latest versions
-npx npm-check-updates -u
-# Install updated dependencies
-npm install
-```
+1. Navigate to the `frontend` directory:
+   ```powershell
+   cd frontend
+   ```
+2. Run `npm-check-updates` (`ncu`) to rewrite your `package.json` to the latest releases:
+   ```powershell
+   npx npm-check-updates -u
+   ```
+3. Install with the `--legacy-peer-deps` flag (bypasses peer dependency resolution errors):
+   ```powershell
+   npm install --legacy-peer-deps
+   ```
 
-#### Backend
+#### 2. Backend (Python / uv)
 
-```bash
-cd backend
-# Upgrade all locked dependencies in uv.lock
-uv lock --upgrade
-# Sync the virtual environment with the updated lockfile
-uv sync
-```
+1. Navigate to the `backend` directory:
+   ```powershell
+   cd backend
+   ```
+2. Upgrade all locked packages to the latest compatible versions in `uv.lock` and sync the virtual environment:
+   ```powershell
+   uv lock --upgrade
+   uv sync
+   ```
 

@@ -57,29 +57,19 @@ export const runA2uiAction: PageActionHandler = async (
     page,
     rendered > 0
       ? [
-          'a2ui — rendering',
-          '',
-          'declarative UI mounted; this note is stale, update pages.config.ts',
-          'and drop the finding from the README known issues.',
-        ]
-      : [
-          'a2ui — enabled but inert',
-          '',
-          'runtime: a2ui: {} is set in frontend/server.ts',
-          '/api/copilotkit/info reports a2uiEnabled: true',
-          'result: agent replies in prose, no declarative UI is mounted',
-          '',
-          'why: the renderer registers on a2ui.catalog, which is not set,',
-          'and the guide’s catalog snippets are not self-contained:',
-          '- fixedDefinitions references an undefined dynamicString',
-          '- a2uiConfigForFeature references beautifulCatalog,',
-          '  declarativeCatalog and fixedCatalog, none of them defined',
-          '- app.config.ts snippet references an undefined productCatalog',
-          '- only the fixed schema and the styles.css classes are given',
-          '',
-          'need: one complete catalog definition in the guide, end to end,',
-          'so a component can actually be resolved and rendered.',
-        ],
+      'a2ui rendering',
+      '',
+      'declarative UI is mounted; this note is stale',
+      'update pages.config.ts and remove it from README known issues.',
+    ]
+    :
+    [
+      'a2ui enabled but inert',
+      '',
+      'a2ui isenabled, but no declarative UI is rendered',
+      'the renderer expects a2ui.catalog, which is not set',
+      'the guide needs a complete catalog example.',
+    ],
     1550,
     260,
   );

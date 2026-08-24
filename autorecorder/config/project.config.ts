@@ -97,7 +97,7 @@ export const PROJECT: ProjectConfig = {
   //   PORT=8300 uv run main.py                                      (backend)
   //   MICROSOFT_AGENT_FRAMEWORK_URL=http://localhost:8300/ npm run dev
   //   BACKEND_URL=http://localhost:8300 npm run record              (here)
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4200',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4202',
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8200',
   // FastAPI + Uvicorn, with a single `POST /` mounted by
   // add_agent_framework_fastapi_endpoint -- so there is no health route and a
