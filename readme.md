@@ -5,7 +5,7 @@ This project is an **interactive test harness and demonstration suite** for vali
 The repository serves two main purposes:
 
 1. **Interactive Demo & QA Harness**: A running Angular 22 web application that implements and tests every feature of `@copilotkit/angular` against a live Python-based Microsoft Agent Framework backend.
-2. **Living Documentation Verifier**: Mirrors the official documentation found in [2-docs/](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/2-docs), ensuring that code snippets shown in docs are byte-identical to actual executing code.
+2. **Living Documentation Verifier**: Mirrors the official documentation found in [doc-snapshot/](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/doc-snapshot), ensuring that code snippets shown in docs are byte-identical to actual executing code.
 
 ---
 
@@ -60,15 +60,11 @@ flowchart LR
 ```
 mspy-angular/
 ├── project-context.md          # Rules & ground truth for doc-project parity
-├── 2-docs/                     # Markdown source documentation
-│   ├── 1-quickstart.md
-│   ├── 2-chat-ui.md
-│   ├── 3-frontend-tools-generative-ui.md
-│   ├── 4-a2-ui.md
-│   ├── 5-voice
-│   ├── 6-human-in-the-loop.md
-│   ├── 7-shared-state.md
-│   └── threads-memory-attachments-headless.md
+├── doc-snapshot/               # Versioned upstream documentation snapshots
+│   ├── manifest.json           # SHA256 checksums & route mappings
+│   ├── CHANGELOG.md            # Doc drift history
+│   ├── reports/                # Timestamped diff analysis reports
+│   └── pages/                  # Tracked official guide markdown files
 ├── backend/                    # Python / Microsoft Agent Framework
 │   ├── pyproject.toml          # uv-managed dependencies (FastAPI, agent-framework)
 │   ├── uv.lock
@@ -106,7 +102,7 @@ The project defines each feature area in [nav-config.ts](file:///c:/Users/dynami
 | **Headless UI**              | [/headless](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/headless.ts)                                                                                                                                   | Custom transcript and message composer built entirely from scratch using `injectAgentStore` & `runAgent`                                   | `Working`                                            |
 | **A2UI (Adaptive UI)**       | [/a2ui](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/a2ui.ts)                                                                                                                                           | Declarative UI driven by runtime A2UI middleware; recovery timers and styling                                                              | `Partial` (Awaiting catalog definition)              |
 | **Voice & Multimodal**       | [/voice-multimodal](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/voice-multimodal.ts)                                                                                                                   | Voice recording controls and multimodal payload generation                                                                                 | `Partial` (No cloud transcription service wired)     |
-| **Threads & Memory**         | [/threads](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/threads.ts), [/memory](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/memory.ts) | Multi-turn thread management and persistent agent memories                                                                                 | `Partial` (Requires Enterprise Intelligence license) |
+| **Threads & Memory**         | [/threads](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/threads.ts), [/memory](file:///c:/Users/dynamic%20computer/Desktop/work/FIQROS/optimized-malaika/mspy-angular/frontend/src/app/pages/memory.ts) | Multi-turn thread management and persistent agent memories                                                                                 | `Partial` (Requires CopilotKit Intelligence license) |
 
 ---
 
@@ -185,6 +181,20 @@ npm run record -- --filter=threads
 Recordings are saved to `autorecorder/videos/MSPY-angular-<NN>-<Name>.webm`.
 That folder is gitignored: videos are build output, and the previous recorder's
 committed clips in `frontend/recordings/` had grown to 51MB.
+
+#### 4. Documentation Drift & Sync
+
+To verify that the project documentation snapshots remain byte-identical with live upstream docs at `https://docs.copilotkit.ai/angular/ms-agent-python`:
+
+```bash
+cd frontend
+
+# Check for doc drift without modifying files
+npm run doc:check
+
+# Synchronize doc snapshots, manifest, changelog, and diff reports
+npm run doc:sync
+```
 
 ---
 

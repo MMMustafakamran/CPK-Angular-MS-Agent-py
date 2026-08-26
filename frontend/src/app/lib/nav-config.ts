@@ -9,7 +9,7 @@
  * which all point back at the same `docPath`.
  */
 
-export const DOC_SYNC_DATE = '2026-08-12';
+export const DOC_SYNC_DATE = '2026-08-26';
 export const DOCS_ROOT = 'https://docs.copilotkit.ai/angular/ms-agent-python';
 
 /**

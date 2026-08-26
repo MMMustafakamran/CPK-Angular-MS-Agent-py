@@ -1,8 +1,8 @@
 # Project Context
 
-This project is already implemented based on the documentation in the `docs/` folder.
+This project is already implemented based on the documentation in the `doc-snapshot/` folder.
 
-The `docs/` folder contains instructions, explanations, code snippets, highlighted snippets, and examples. The working project contains their corresponding implementations.
+The `doc-snapshot/` folder contains instructions, explanations, code snippets, highlighted snippets, and examples. The working project contains their corresponding implementations.
 
 The project is intentionally **simple, lightweight, and testing-friendly**, allowing the implementation to be manually inspected and demonstrated.
 
@@ -17,7 +17,7 @@ The project is intentionally **simple, lightweight, and testing-friendly**, allo
 
 ### Relationship
 
-* `docs/` = documented behavior and implementation
+* `doc-snapshot/` = documented behavior and implementation
 * Project code = working implementation
 * Highlighted/code snippets = references to relevant implementation areas
 

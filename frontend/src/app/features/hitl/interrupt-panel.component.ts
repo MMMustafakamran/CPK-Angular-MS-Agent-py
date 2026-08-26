@@ -38,9 +38,8 @@ type ReviewRequest = {
 })
 export class InterruptPanelComponent {
   // human in the loop : inject interrupt start
-  protected readonly controller = injectInterrupt<ReviewRequest>({
-    agentId: 'default',
-  });
+  protected readonly controller =
+    injectInterrupt<ReviewRequest>('default');
   // human in the loop : inject interrupt end
 
   protected asReviewRequest(value: unknown): ReviewRequest {

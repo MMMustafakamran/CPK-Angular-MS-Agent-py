@@ -46,7 +46,10 @@ import { Callout, Panel, SourceCode, TryIt } from '../components/ui';
               <td class="py-2 pr-4">
                 The backend agent emits an AG-UI interrupt
               </td>
-              <td class="py-2"><code>injectInterrupt</code></td>
+              <td class="py-2">
+                <code>AgentStore.interruptController</code>,
+                <code>injectInterrupt</code>
+              </td>
             </tr>
           </tbody>
         </table>
