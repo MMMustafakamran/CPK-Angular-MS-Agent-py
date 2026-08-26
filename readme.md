@@ -158,6 +158,21 @@ Each of the 11 pages gets one video in three steps: the official doc page, a
 simulated VS Code showing this repo's own source at the relevant lines, then the
 chrome-free `/demo` route driven live.
 
+##### One command, from a cold repo
+
+[`ci/`](ci/README.md) drives the whole thing — doc-drift check, preflight,
+dependency install, all three servers, recording and report — from a single Node
+process, and is what the nightly GitHub Actions workflow runs:
+
+```bash
+npm run automate                              # everything, all pages
+npm run automate -- --pages=quickstart,threads
+npm run automate -- --limit=3 --ignore-doc-drift
+```
+
+It starts the servers itself. The commands below are the by-hand route, against
+servers you started yourself.
+
 Once the backend (`8200`), runtime (`8201`), and frontend dev server (`4202`) are running:
 
 ```bash
