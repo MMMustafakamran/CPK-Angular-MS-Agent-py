@@ -290,7 +290,13 @@ async function main() {
     // 3. Dependencies
     if (!skipInstall) {
       runSync(
-        shouldUpgrade ? 'uv sync --prerelease=allow --upgrade' : 'uv sync --prerelease=allow',
+        // No --prerelease=allow on the upgrade path. Neither lock holds a
+        // prerelease, so the flag buys nothing on a normal sync and on an upgrade
+        // it is actively wrong: it let uv resolve httpx==1.0.dev5, whose module
+        // has no AsyncClient, and the agent died at import. Upgrades track
+        // releases; a prerelease that becomes genuinely required belongs pinned
+        // in pyproject.toml where it can be seen.
+        shouldUpgrade ? 'uv sync --upgrade' : 'uv sync --prerelease=allow',
         BACKEND_DIR,
         'Syncing Backend Dependencies (uv sync)',
       );
