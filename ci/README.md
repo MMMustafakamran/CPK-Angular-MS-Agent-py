@@ -1,8 +1,10 @@
 # `ci/` — the recording pipeline
 
 Everything that builds, starts, checks and records this repo lives here. The
-only piece outside this folder is `.github/workflows/daily-recorder.yml`, because
-GitHub requires that path.
+only pieces outside this folder are the two workflows, because GitHub requires
+that path: `.github/workflows/daily-recorder.yml` records the demos, and
+`.github/workflows/version-watch.yml` reports what the dependencies did
+overnight. They are independent — see *Version watch*.
 
 ## Layout
 
@@ -10,6 +12,8 @@ GitHub requires that path.
 ci/
 ├── automate.mjs          entry point — one process, start to finish
 ├── check-doc-drift.mjs   compares doc-snapshot/ against the live docs
+├── check-versions.mjs    dependency drift report (read-only) — VERSION-WATCH.md
+├── resolved-versions.json  what the last nightly resolved; git history is the timeline
 ├── list-pages.mjs        prints the recorder's page ids
 ├── validate-pages.mjs    rejects unknown ids before a run starts
 ├── resolve-selection.mjs expands dispatch checkboxes + ids into a page list
@@ -33,6 +37,8 @@ ci/
 | `npm run drift` | Doc drift check on its own |
 | `npm run drift:sync` | Update `doc-snapshot/` to match live docs |
 | `npm run ci:pages` | List valid page ids |
+| `node ci/check-versions.mjs` | Dependency drift report — writes nothing |
+| `node ci/check-versions.mjs --snapshot` | Same, and rewrites `ci/resolved-versions.json` |
 
 Anything not consumed by `automate.mjs` is forwarded to the recorder:
 
@@ -183,6 +189,50 @@ inter-package peer requirements made the result unsatisfiable. Raising a range
 is a reviewed edit to `package.json`, not something a nightly recording run
 should do to itself.
 
+## Version watch
+
+Re-resolving means the versions under test move on their own — silently. A
+broken recording could be this repo's code or a dependency bump, and nothing in
+a recording run says which. `check-versions.mjs` supplies the missing record,
+and runs on its own schedule:
+
+```
+05:30 UTC  version-watch.yml   re-resolve → report → commit the snapshot
+06:00 UTC  daily-recorder.yml  re-resolve → record the demos
+```
+
+The two are **independent**. The recorder does not wait for the watch, and a
+moved version never blocks a recording: drift is news, not a build failure.
+They are separate workflows for two more reasons — asking "what moved?" should
+not cost three sharded workers and a run of model calls, and the watch needs
+`contents: write` to commit its snapshot, which is worth keeping out of the
+workflow that holds the model keys.
+
+Each re-resolves independently, so a package published inside that 30-minute gap
+could reach the recorder without appearing in the snapshot. Rare, and the cost
+of merging them back is coupling plus write access beside the secrets.
+
+What the report contains:
+
+| Section | Answers |
+|---|---|
+| What moved since the last run | Diff against `ci/resolved-versions.json` — the overnight suspects |
+| Frontend | `npm outdated`, **classified**: ours to bump / upstream pin / peer-blocked |
+| Upstream pins | What the newest `@copilotkit/angular` and `/runtime` force on consumers |
+| Protocol fragmentation | Multiple copies of `@ag-ui/*` or `@copilotkit/core` in one tree |
+
+Classification matters because only one of the three causes is actionable here:
+`@copilotkit/angular` exact-pins `@copilotkit/core`, and Angular's
+`peerDependencies` forbid a newer TypeScript. Treating `npm outdated`'s
+`Latest` column as a to-do list breaks the build. `ci/VERSION-WATCH.md` carries
+the reasoning, the current findings, and the manual upgrade ritual.
+
+The snapshot is committed rather than uploaded, so
+`git log -p ci/resolved-versions.json` is the timeline. Scheduled runs always
+commit; a manual run only does so if you tick **Commit the resolved-version
+snapshot**. If the push is rejected — a protected default branch — the job says
+so in its summary and stays green.
+
 ## Adding a page
 
 1. Add it to `autorecorder/config/pages.config.ts`.
@@ -198,9 +248,13 @@ third of the pages under `xvfb-run`, then `consolidate-recordings` merges the
 artifacts.
 
 ```
+daily-recorder.yml
             ┌─ Worker 1/3 ─┐
 prepare ────┼─ Worker 2/3 ─┼─→ consolidate-recordings
             └─ Worker 3/3 ─┘
+
+version-watch.yml
+version-watch          (separate workflow, no dependency either way)
 ```
 
 ## Artifact names

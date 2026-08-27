@@ -215,30 +215,64 @@ npm run doc:sync
 
 ### Upgrading Packages
 
+Most upgrades need no action. Every run drops the lockfiles and re-resolves, so
+the newest versions the declared ranges already allow are installed and recorded
+the night they ship. What follows is only for **crossing a range boundary**,
+which is a reviewed edit.
+
+#### What is worth upgrading — check first
+
+```powershell
+node ci/check-versions.mjs
+```
+
+Read-only. It sorts what is outdated into the only three things it can be, and
+just one of them is actionable here:
+
+| Cause | Do |
+|---|---|
+| Our range is behind | Bump it — the steps below |
+| An upstream package **exact-pins** an older version | Nothing. Report it upstream |
+| A **peerDependency** forbids the newer one | Nothing. Bumping breaks the build |
+
+`@copilotkit/angular` exact-pins `@copilotkit/core`, and Angular 22 requires
+`typescript >=6.0 <6.1` — so TypeScript reads a full major behind and must stay
+there. The nightly publishes this report on its own; see
+[`ci/VERSION-WATCH.md`](ci/VERSION-WATCH.md).
+
 #### 1. Frontend (Angular / npm)
 
-1. Navigate to the `frontend` directory:
-   ```powershell
-   cd frontend
-   ```
-2. Run `npm-check-updates` (`ncu`) to rewrite your `package.json` to the latest releases:
-   ```powershell
-   npx npm-check-updates -u
-   ```
-3. Install with the `--legacy-peer-deps` flag (bypasses peer dependency resolution errors):
-   ```powershell
-   npm install --legacy-peer-deps
-   ```
+```powershell
+git checkout -b chore/bump-<package>
+npm --prefix frontend install <package>@<version>
+git diff frontend/package-lock.json   # one bump can drag in dozens of transitives
+npm --prefix frontend run build
+```
+
+Then record the affected pages before merging — verifying the docs still run is
+what this repo is for. Revert with
+`git checkout frontend/package-lock.json; npm ci`.
+
+Two things not to do:
+
+- **`npx npm-check-updates -u`** rewrites `package.json` to the newest release of
+  everything, ignoring the ranges. It used to run in CI and was the largest
+  single source of failures — it bumped all twelve `@angular/*` packages past
+  Angular's exact inter-package peer requirements, leaving the tree
+  unsatisfiable. Removed in `1c9b067`.
+- **`npm install --legacy-peer-deps`** does not fix a peer conflict, it hides
+  one. The error it silences is the signal that the combination being installed
+  was never meant to work together — precisely what this harness reports on.
 
 #### 2. Backend (Python / uv)
 
-1. Navigate to the `backend` directory:
-   ```powershell
-   cd backend
-   ```
-2. Upgrade all locked packages to the latest compatible versions in `uv.lock` and sync the virtual environment:
-   ```powershell
-   uv lock --upgrade
-   uv sync
-   ```
+```powershell
+cd backend
+uv lock --upgrade
+uv sync
+```
+
+This moves `uv.lock` to the newest versions `pyproject.toml` already allows.
+Raising a floor in `pyproject.toml` follows the same branch-and-verify path as
+the frontend.
 
