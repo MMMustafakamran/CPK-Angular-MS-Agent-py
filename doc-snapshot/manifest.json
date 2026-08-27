@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/angular/ms-agent-python",
-  "syncedAt": "2026-08-26T20:04:16.918Z",
+  "syncedAt": "2026-08-27T07:29:46.286Z",
   "pages": {
     "/angular/ms-agent-python": {
       "file": "angular__ms-agent-python.md",
@@ -13,7 +13,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/quickstart": {
       "file": "angular__ms-agent-python__quickstart.md",
@@ -25,7 +25,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/chat-ui": {
       "file": "angular__ms-agent-python__guides__chat-ui.md",
@@ -37,7 +37,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/frontend-tools-generative-ui": {
       "file": "angular__ms-agent-python__guides__frontend-tools-generative-ui.md",
@@ -49,7 +49,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/a2ui": {
       "file": "angular__ms-agent-python__guides__a2ui.md",
@@ -61,7 +61,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/voice-multimodal": {
       "file": "angular__ms-agent-python__guides__voice-multimodal.md",
@@ -73,7 +73,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/human-in-the-loop": {
       "file": "angular__ms-agent-python__guides__human-in-the-loop.md",
@@ -85,7 +85,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/shared-state": {
       "file": "angular__ms-agent-python__guides__shared-state.md",
@@ -97,7 +97,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     },
     "/angular/ms-agent-python/guides/threads-memory-attachments-headless": {
       "file": "angular__ms-agent-python__guides__threads-memory-attachments-headless.md",
@@ -112,7 +112,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 20:04:16 GMT"
+      "date": "Thu, 27 Aug 2026 07:29:46 GMT"
     }
   }
 }
