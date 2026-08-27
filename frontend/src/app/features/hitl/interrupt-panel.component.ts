@@ -37,9 +37,30 @@ type ReviewRequest = {
   `,
 })
 export class InterruptPanelComponent {
+  // TEMPORARY DIVERGENCE FROM THE DOC — revert once the guide is corrected.
+  //
+  // The doc's snippet passes the agent id as a string:
+  //
+  //     injectInterrupt<ReviewRequest>('default');
+  //
+  // That does not compile against @copilotkit/angular@0.3.1, whose declaration
+  // takes an options object and has no string overload:
+  //
+  //     declare function injectInterrupt<TValue, TResult>(
+  //       options?: InjectInterruptOptions<TValue, TResult>
+  //     ): InterruptController<TValue, TResult>;
+  //
+  //   TS2559: Type '"default"' has no properties in common with type
+  //           'InjectInterruptOptions<ReviewRequest, never>'
+  //
+  // The same doc page already uses the object form further down, in the
+  // runnable Showcase example — so the API moved and this snippet was left
+  // behind. Reported upstream; kept diverged because one compile error blocks
+  // every recording, not just this page.
+  //
   // human in the loop : inject interrupt start
   protected readonly controller =
-    injectInterrupt<ReviewRequest>('default');
+    injectInterrupt<ReviewRequest>({ agentId: 'default' });
   // human in the loop : inject interrupt end
 
   protected asReviewRequest(value: unknown): ReviewRequest {
