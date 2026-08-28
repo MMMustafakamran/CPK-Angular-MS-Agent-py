@@ -39,8 +39,14 @@ const BACKEND_DIR = path.join(ROOT_DIR, 'backend');
 const AUTORECORDER_DIR = path.join(ROOT_DIR, 'autorecorder');
 const SNAPSHOT_PATH = path.join(__dirname, 'resolved-versions.json');
 
-/** Packages whose pins we probe directly: the upstream we do not control. */
-const UPSTREAM_PROBES = ['@copilotkit/angular', '@copilotkit/runtime'];
+/**
+ * Packages whose pins we probe directly: the upstream we do not control.
+ * `@ag-ui/client` earns its place beside the CopilotKit pair because it is the
+ * bridge this repo is built on — it is the only direct @ag-ui dependency the
+ * frontend declares (server.ts constructs its HttpAgent), and everything else
+ * @ag-ui arrives underneath @copilotkit/runtime.
+ */
+const UPSTREAM_PROBES = ['@copilotkit/angular', '@copilotkit/runtime', '@ag-ui/client'];
 /** Packages worth checking for multiple copies: the ones that carry protocol. */
 const FRAGMENTATION_WATCH = ['@ag-ui/client', '@ag-ui/core', '@copilotkit/core'];
 
@@ -59,9 +65,11 @@ const say = (line = '') => out.push(line);
 function run(args, cwd = ROOT_DIR) {
   const cmd = ['npm', ...args].map((a) => (/^[\w.@/^~=<>-]+$/.test(a) ? a : JSON.stringify(a))).join(' ');
   try {
-    return { ok: true, text: execSync(cmd, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }) };
+    const stdout = execSync(cmd, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    return { ok: true, text: stdout, stdout };
   } catch (err) {
-    return { ok: false, text: `${err.stdout || ''}${err.stderr || ''}` };
+    const stdout = err.stdout || '';
+    return { ok: false, text: `${stdout}${err.stderr || ''}`, stdout };
   }
 }
 
@@ -202,6 +210,32 @@ function reportOutdated(label, dir) {
  * 2. Probe the pins upstream declares
  * ------------------------------------------------------------------ */
 
+/**
+ * `npm view <pkg> <field> --json` does not answer with one shape. It can return
+ * the object, or that object wrapped in a single-element array — which reads as
+ * `{"0": {...}}` to Object.entries and quietly renders as "no pins declared".
+ * Returns null only when the probe produced nothing, so the caller can say
+ * unknown instead of clean.
+ */
+function viewObject(pkg, field) {
+  const { ok, stdout } = npm(['view', pkg, field, '--json']);
+  if (!ok) return null;               // 404, network, auth — a failed probe
+  if (!stdout.trim()) return {};      // succeeded and the field is simply absent
+  let raw;
+  try {
+    raw = JSON.parse(stdout);
+  } catch {
+    return null;
+  }
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (!value || typeof value !== 'object') return {};
+  // `npm view --json` prints its error object to STDOUT and it parses cleanly,
+  // so a 404 would otherwise arrive here as a well-formed object with no pins
+  // in it — and render as "no pins declared". That is the all-clear lie.
+  if ('error' in value) return null;
+  return value;
+}
+
 function reportUpstreamPins() {
   say('### Upstream pins');
   say();
@@ -211,25 +245,44 @@ function reportUpstreamPins() {
   say();
 
   for (const pkg of UPSTREAM_PROBES) {
-    const latest = npm(['view', pkg, 'version']).text.trim();
-    const deps = npmJson(['view', pkg, 'dependencies', '--json']) || {};
-    const notable = Object.entries(deps).filter(([d]) => /^@(copilotkit|ag-ui)\//.test(d));
+    // .stdout, not .text: on a failed lookup the error banner lives on stderr
+    // and would otherwise be printed as if it were a version number.
+    const probe = npm(['view', pkg, 'version']);
+    const latest = probe.ok ? probe.stdout.trim() : '';
+    const deps = viewObject(pkg, 'dependencies');
+    const peers = viewObject(pkg, 'peerDependencies');
+    const interesting = (obj) => Object.entries(obj || {}).filter(([d]) => /^@(copilotkit|ag-ui)\//.test(d));
+    const notable = interesting(deps);
+    const notablePeers = interesting(peers);
 
     say(`**\`${pkg}\`** — latest \`${latest || 'unknown'}\``);
     say();
-    if (notable.length === 0) {
+    // A null from either probe means the registry read failed, not that the
+    // package declares nothing. Saying "no pins" there would be the same
+    // all-clear lie the outdated check guards against.
+    if (deps === null || peers === null) {
+      say('- ⚠️ **could not read this package from the registry — unknown, not clean**');
+      say();
+      continue;
+    }
+    if (notable.length === 0 && notablePeers.length === 0) {
       say('- no CopilotKit or AG-UI pins declared');
-    } else {
-      for (const [dep, range] of notable) {
-        const depLatest = npm(['view', dep, 'version']).text.trim();
-        // Compare versions, not strings: "~0.5.0" against "0.5.0" is not drift.
-        // A range with a modifier can still reach newer patches on its own, so
-        // only an exact pin genuinely holds a consumer back.
-        const exact = /^\d/.test(range);
-        const behind = depLatest && exact && range !== depLatest ? `  ← latest is ${depLatest}` : '';
-        const note = !exact && depLatest && range.replace(/^[\^~]/, '') !== depLatest ? '  (range, resolves freely)' : '';
-        say(`- \`${dep}\`: \`${range}\`${behind}${note}`);
-      }
+    }
+    for (const [dep, range] of notable) {
+      const depLatest = npm(['view', dep, 'version']).text.trim();
+      // Compare versions, not strings: "~0.5.0" against "0.5.0" is not drift.
+      // A range with a modifier can still reach newer patches on its own, so
+      // only an exact pin genuinely holds a consumer back.
+      const exact = /^\d/.test(range);
+      const behind = depLatest && exact && range !== depLatest ? `  ← latest is ${depLatest}` : '';
+      const note = !exact && depLatest && range.replace(/^[\^~]/, '') !== depLatest ? '  (range, resolves freely)' : '';
+      say(`- \`${dep}\`: \`${range}\`${behind}${note}`);
+    }
+    // A peer range constrains us exactly as hard as a dependency pin, but it is
+    // satisfied out of OUR tree — so it surfaces as our version being wrong
+    // rather than as upstream holding something back. Name it as upstream's.
+    for (const [dep, range] of notablePeers) {
+      say(`- \`${dep}\`: \`${range}\`  (peer — satisfied from our tree)`);
     }
     say();
   }
