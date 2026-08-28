@@ -43,7 +43,40 @@
  * to report, not something to do here.
  */
 
-import { definePages } from '../core/types';
+import { type PageDefinition, definePages } from '../core/types';
+
+const RESERVED_PREFIX = 'reserved:';
+
+/**
+ * A slot in the Angular guide list that this repo has no demo for.
+ *
+ * The clip index is `definePages`' array position, so without these the
+ * numbering closes up over a missing page: Shared State recorded as `06` here
+ * and `07` in Agno-angular and Mastra-angular, which document the same guides
+ * in the same order. The clips land in one folder, so two files with the same
+ * number showing different guides is exactly the confusion the numbering is
+ * there to prevent.
+ *
+ * Reserving the slot keeps the number attached to the guide rather than to
+ * whatever this repo happens to record. A reserved entry exists only to occupy
+ * an index — it is filtered out below, before `definePages`' result is
+ * exported, so no doctor check, CLI flag, shard split or recording ever sees
+ * one. Its fields are placeholders for that reason.
+ *
+ * When the demo does land, replace the `reserve(...)` call with the real entry
+ * in place and the number it has always been reserved for is the one it gets.
+ */
+const reserve = (guide: string): PageDefinition => ({
+  id: `${RESERVED_PREFIX}${guide}`,
+  name: `(reserved) ${guide}`,
+  videoName: 'Reserved',
+  docPath: '',
+  route: '',
+  ideFile: '',
+  startLine: 1,
+  endLine: 1,
+  prompt: '',
+});
 
 export const PAGES = definePages([
   {
@@ -147,6 +180,9 @@ export const PAGES = definePages([
     waitAfterPromptMs: 4000,
   },
 
+  // The A2UI guide has no demo route in this frontend yet.
+  reserve('a2ui'),
+
   {
     id: 'voice-multimodal',
     name: 'Guides - Voice and multimodal input',
@@ -243,6 +279,9 @@ export const PAGES = definePages([
     waitAfterPromptMs: 4000,
   },
 
+  // Memory is a premium component, unavailable in this runtime.
+  reserve('memory'),
+
   {
     id: 'attachments',
     name: 'Attachments',
@@ -273,4 +312,4 @@ export const PAGES = definePages([
     prompt: 'Tell me a short joke about Angular.',
     waitAfterPromptMs: 4000,
   },
-]);
+]).filter((page) => !page.id.startsWith(RESERVED_PREFIX));
