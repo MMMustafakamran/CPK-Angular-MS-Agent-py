@@ -81,6 +81,15 @@ export const NAV: NavGroup[] = [
           'The smallest end-to-end path: an HttpAgent in Copilot Runtime pointed at the Agent Framework endpoint, provideCopilotKit, and one copilot-chat.',
         status: 'working',
       },
+      {
+        path: '/inspector',
+        hasDemo: true,
+        title: 'Inspector',
+        docPath: '/angular/ms-agent-python/inspector',
+        summary:
+          'The Inspector @copilotkit/angular mounts for you as of 0.4.0 — nothing to install, nothing to mount, and nothing to retract here.',
+        status: 'working',
+      },
     ],
   },
   {

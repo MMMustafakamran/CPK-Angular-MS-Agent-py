@@ -15,13 +15,13 @@
       "age": 0,
       "date": "Sun, 30 Aug 2026 13:43:33 GMT"
     },
-    "/angular/ms-agent-python/quickstart": {
-      "file": "angular__ms-agent-python__quickstart.md",
-      "sha256": "050af1fb97a980111133e63ac3aecd2e41d15f00f3d67e7c63635cf5a33909ca",
-      "bytes": 7159,
-      "lines": 185,
+    "/angular/ms-agent-python/guides/a2ui": {
+      "file": "angular__ms-agent-python__guides__a2ui.md",
+      "sha256": "b0b8759247190d311fca9fcea6923eedb3a9603c980325f90cbca447b6cb8778",
+      "bytes": 5849,
+      "lines": 195,
       "routes": [
-        "/quickstart"
+        "/a2ui"
       ],
       "status": "ok",
       "age": 0,
@@ -46,30 +46,6 @@
       "lines": 178,
       "routes": [
         "/frontend-tools-generative-ui"
-      ],
-      "status": "ok",
-      "age": 0,
-      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
-    },
-    "/angular/ms-agent-python/guides/a2ui": {
-      "file": "angular__ms-agent-python__guides__a2ui.md",
-      "sha256": "b0b8759247190d311fca9fcea6923eedb3a9603c980325f90cbca447b6cb8778",
-      "bytes": 5849,
-      "lines": 195,
-      "routes": [
-        "/a2ui"
-      ],
-      "status": "ok",
-      "age": 0,
-      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
-    },
-    "/angular/ms-agent-python/guides/voice-multimodal": {
-      "file": "angular__ms-agent-python__guides__voice-multimodal.md",
-      "sha256": "2c180ef09dbeb6cb7be6eb3f7959537e0cef845d96ac549243fb50c7dfc890fc",
-      "bytes": 3809,
-      "lines": 111,
-      "routes": [
-        "/voice-multimodal"
       ],
       "status": "ok",
       "age": 0,
@@ -109,6 +85,42 @@
         "/memory",
         "/attachments",
         "/headless"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
+    },
+    "/angular/ms-agent-python/guides/voice-multimodal": {
+      "file": "angular__ms-agent-python__guides__voice-multimodal.md",
+      "sha256": "2c180ef09dbeb6cb7be6eb3f7959537e0cef845d96ac549243fb50c7dfc890fc",
+      "bytes": 3809,
+      "lines": 111,
+      "routes": [
+        "/voice-multimodal"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
+    },
+    "/angular/ms-agent-python/inspector": {
+      "file": "angular__ms-agent-python__inspector.md",
+      "sha256": "2198add0766413590462b4ccbea991d949d6e93765ded5b8679180ed6e327352",
+      "bytes": 2981,
+      "lines": 72,
+      "routes": [
+        "/inspector"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Mon, 01 Sep 2026 00:00:00 GMT"
+    },
+    "/angular/ms-agent-python/quickstart": {
+      "file": "angular__ms-agent-python__quickstart.md",
+      "sha256": "050af1fb97a980111133e63ac3aecd2e41d15f00f3d67e7c63635cf5a33909ca",
+      "bytes": 7159,
+      "lines": 185,
+      "routes": [
+        "/quickstart"
       ],
       "status": "ok",
       "age": 0,
