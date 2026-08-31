@@ -37,14 +37,14 @@ type ReviewRequest = {
   `,
 })
 export class InterruptPanelComponent {
-  // TEMPORARY DIVERGENCE FROM THE DOC — revert once the guide is corrected.
+  // DIVERGENCE RESOLVED at @copilotkit/angular@0.4.0 — the doc's own form runs.
   //
   // The doc's snippet passes the agent id as a string:
   //
   //     injectInterrupt<ReviewRequest>('default');
   //
-  // That does not compile against @copilotkit/angular@0.3.1, whose declaration
-  // takes an options object and has no string overload:
+  // That did not compile against @copilotkit/angular@0.3.1, whose declaration
+  // took an options object and had no string overload:
   //
   //     declare function injectInterrupt<TValue, TResult>(
   //       options?: InjectInterruptOptions<TValue, TResult>
@@ -53,14 +53,20 @@ export class InterruptPanelComponent {
   //   TS2559: Type '"default"' has no properties in common with type
   //           'InjectInterruptOptions<ReviewRequest, never>'
   //
-  // The same doc page already uses the object form further down, in the
-  // runnable Showcase example — so the API moved and this snippet was left
-  // behind. Reported upstream; kept diverged because one compile error blocks
-  // every recording, not just this page.
+  // This file carried the object form for as long as that was true, because one
+  // compile error blocks every recording, not just this page. 0.4.0 publishes
+  // the string-first overload:
+  //
+  //     declare function injectInterrupt<TValue, TResult>(
+  //       agentId?: InterruptAgentId,
+  //       options?: Omit<InjectInterruptOptions<TValue, TResult>, "agentId">
+  //     ): InterruptController<TValue, TResult>;
+  //
+  // The finding stands as a doc-ahead-of-release defect — the page carried no
+  // version note while the snippet was uncompilable — but it no longer blocks.
   //
   // human in the loop : inject interrupt start
-  protected readonly controller =
-    injectInterrupt<ReviewRequest>({ agentId: 'default' });
+  protected readonly controller = injectInterrupt<ReviewRequest>('default');
   // human in the loop : inject interrupt end
 
   protected asReviewRequest(value: unknown): ReviewRequest {
