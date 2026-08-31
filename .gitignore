@@ -40,3 +40,10 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 Thumbs.db
+
+# Stray recordings saved outside autorecorder/videos/ -- a clip dropped in the
+# repo root or beside the code it shows matches none of the rules above, which
+# is how a 66MB .mp4 and a 5.9MB .webm reached `git status` untracked. Video
+# only: the voiceover assets in autorecorder/audio/ are .m4a and ARE committed.
+*.webm
+*.mp4
