@@ -9,6 +9,7 @@ const BASE_URL = 'https://docs.copilotkit.ai';
 const DOC_PAGES = [
   { docPath: '/angular/ms-agent-python', routes: ['/'] },
   { docPath: '/angular/ms-agent-python/quickstart', routes: ['/quickstart'] },
+  { docPath: '/angular/ms-agent-python/inspector', routes: ['/inspector'] },
   { docPath: '/angular/ms-agent-python/guides/chat-ui', routes: ['/chat-ui'] },
   { docPath: '/angular/ms-agent-python/guides/frontend-tools-generative-ui', routes: ['/frontend-tools-generative-ui'] },
   { docPath: '/angular/ms-agent-python/guides/a2ui', routes: ['/a2ui'] },
