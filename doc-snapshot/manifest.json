@@ -1,19 +1,19 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/angular/ms-agent-python",
-  "syncedAt": "2026-08-30T13:43:33.889Z",
+  "syncedAt": "2026-09-04T07:57:52.795Z",
   "pages": {
     "/angular/ms-agent-python": {
       "file": "angular__ms-agent-python.md",
-      "sha256": "050af1fb97a980111133e63ac3aecd2e41d15f00f3d67e7c63635cf5a33909ca",
-      "bytes": 7159,
+      "sha256": "64d64a220e96e9005c4630976baeba99d9e1284cfb64e4b616b6a193e69fd3d5",
+      "bytes": 7164,
       "lines": 185,
       "routes": [
         "/"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
+      "date": "Fri, 04 Sep 2026 07:57:52 GMT"
     },
     "/angular/ms-agent-python/guides/a2ui": {
       "file": "angular__ms-agent-python__guides__a2ui.md",
@@ -41,15 +41,15 @@
     },
     "/angular/ms-agent-python/guides/frontend-tools-generative-ui": {
       "file": "angular__ms-agent-python__guides__frontend-tools-generative-ui.md",
-      "sha256": "48aec440ade17b1c9b61c0bcdb606a736ddc9b3a09ee8e90a6b3e4f1028316ff",
-      "bytes": 5737,
-      "lines": 178,
+      "sha256": "52daea487323ade1cee1587f6c62a1b7fcd1aeac24451c9c1f3b5a391eb48785",
+      "bytes": 7893,
+      "lines": 236,
       "routes": [
         "/frontend-tools-generative-ui"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
+      "date": "Fri, 04 Sep 2026 07:57:52 GMT"
     },
     "/angular/ms-agent-python/guides/human-in-the-loop": {
       "file": "angular__ms-agent-python__guides__human-in-the-loop.md",
@@ -116,15 +116,15 @@
     },
     "/angular/ms-agent-python/quickstart": {
       "file": "angular__ms-agent-python__quickstart.md",
-      "sha256": "050af1fb97a980111133e63ac3aecd2e41d15f00f3d67e7c63635cf5a33909ca",
-      "bytes": 7159,
+      "sha256": "64d64a220e96e9005c4630976baeba99d9e1284cfb64e4b616b6a193e69fd3d5",
+      "bytes": 7164,
       "lines": 185,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Sun, 30 Aug 2026 13:43:33 GMT"
+      "date": "Fri, 04 Sep 2026 07:57:52 GMT"
     }
   }
 }
