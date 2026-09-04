@@ -119,7 +119,7 @@ export const PAGES = definePages([
       // FastAPI app it is mounted on.
       { filePath: 'backend/main.py', startLine: 93, endLine: 108 },
     ],
-    prompt: 'Can you tell me a joke?',
+    prompt: 'Hey, are you connected? Tell me a quick fun fact about kites.',
     waitAfterPromptMs: 4000,
   },
   {
@@ -144,10 +144,10 @@ export const PAGES = definePages([
     ],
     // Four surfaces, driven in order by the handler: inline, custom assistant
     // message, popup, sidebar. Only the first two take a prompt.
-    prompt: 'What is CopilotKit?',
+    prompt: 'In two sentences, what does CopilotKit do?',
     prompts: [
-      'What is CopilotKit?',
-      'Tell me what makes your custom assistant layout unique.',
+      'In two sentences, what does CopilotKit do?',
+      'Nice layout. What is different about how you are rendered here?',
     ],
     waitAfterPromptMs: 4000,
   },
@@ -193,11 +193,11 @@ export const PAGES = definePages([
     // whose result is the page itself repainting, and the new display-only
     // registration — which draws the right card and then makes the agent
     // apologise for it.
-    prompt: "What's the weather in Tokyo?",
+    prompt: 'Check the weather in Tokyo for me.',
     prompts: [
-      "What's the weather in Tokyo?",
-      'Change the background to violet',
-      'Show me incident INC-4711, severity sev1.',
+      'Check the weather in Tokyo for me.',
+      'Could you change the background to violet?',
+      'Pull up incident INC-4711 for me. It is a sev1.',
     ],
     waitAfterPromptMs: 4000,
   },
@@ -222,7 +222,7 @@ export const PAGES = definePages([
     // answerable from the system prompt. The microphone then records, and this
     // runtime configures no transcription service, so transcription fails by
     // design — the handler shows that and says so.
-    prompt: 'Read the attached chart. What is its title, and what is the Q4 value?',
+    prompt: 'Have a look at the chart I attached. What is it titled, and what does Q4 come to?',
     waitAfterPromptMs: 4000,
   },
   {
@@ -242,7 +242,7 @@ export const PAGES = definePages([
         endLine: 41,
       },
     ],
-    prompt: 'Delete my account, but ask me to approve it first.',
+    prompt: 'Please delete my account. Check with me before you actually do it.',
     waitAfterPromptMs: 4000,
   },
   {
@@ -267,11 +267,11 @@ export const PAGES = definePages([
       // `shared state : state schema start|end`.
       { filePath: 'backend/main.py', startLine: 21, endLine: 32 },
     ],
-    prompt: 'what is priority set as?',
+    prompt: 'What is the priority set to right now?',
     prompts: [
-      'what is priority set as?',
-      'what is priority set as?',
-      'what is my timezone?',
+      'What is the priority set to right now?',
+      'And now? What is the priority?',
+      'Which timezone am I on?',
     ],
     waitAfterPromptMs: 4000,
   },
@@ -301,7 +301,7 @@ export const PAGES = definePages([
     // Thread endpoints are licensed. Unlicensed, the hand-built list stays empty
     // and the drawer renders its locked state — which is the expected result,
     // and what this recording documents. The chat beside it answers normally.
-    prompt: 'Give me a one-line summary of what threads are for.',
+    prompt: 'In one line, what are threads for?',
     waitAfterPromptMs: 4000,
   },
 
@@ -323,7 +323,7 @@ export const PAGES = definePages([
     // of attachments are supported?" could be answered from the system prompt
     // alone, which is how a broken upload comes to look fine on video.
     prompt:
-      'Read the attached chart. What is its title, and what is the Q4 value?',
+      'I attached a chart. What is its title, and what is the Q4 number?',
     waitAfterPromptMs: 4000,
   },
   {
@@ -335,7 +335,7 @@ export const PAGES = definePages([
     ideFile: 'frontend/src/app/features/headless/headless-chat.component.ts',
     startLine: 12,
     endLine: 65,
-    prompt: 'Tell me a short joke about Angular.',
+    prompt: 'Tell me a short joke about Angular developers.',
     waitAfterPromptMs: 4000,
   },
   {
@@ -375,7 +375,7 @@ export const PAGES = definePages([
     // The quickstart's Inspector step is not satisfied by a static panel: it
     // asks the reader to send a message and watch AG-UI events move, so the
     // run has to happen before the panel is opened.
-    prompt: 'Can you tell me a joke?',
+    prompt: 'Quick check: what is 17 times 23?',
     waitAfterPromptMs: 4000,
   },
 ]).filter((page) => !page.id.startsWith(RESERVED_PREFIX));

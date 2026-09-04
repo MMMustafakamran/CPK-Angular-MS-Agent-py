@@ -17,6 +17,8 @@ import { type PageActionHandler, type PageRecordConfig } from '../core/types';
 export const runSharedStateAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
+  _rootPath,
+  ctx,
 ) => {
   const [
     highPrompt = 'what is priority set as?',
@@ -38,7 +40,7 @@ export const runSharedStateAction: PageActionHandler = async (
     await humanClick(page);
     await sleep(1000);
   } else {
-    console.warn(`   ⚠️ "Mark high priority" button not found.`);
+    ctx.warn('"Mark high priority" button not found -- turn 1 asked about state nothing had set.');
   }
 
   console.log(`   💬 Turn 1: ${highPrompt}`);
@@ -59,7 +61,7 @@ export const runSharedStateAction: PageActionHandler = async (
     await humanClick(page);
     await sleep(1000);
   } else {
-    console.warn(`   ⚠️ "Mark low priority" button not found.`);
+    ctx.warn('"Mark low priority" button not found -- turn 2 asked about state nothing had changed.');
   }
 
   console.log(`   💬 Turn 2: ${lowPrompt}`);
@@ -79,7 +81,7 @@ export const runSharedStateAction: PageActionHandler = async (
     await humanClick(page);
     await sleep(1000);
   } else {
-    console.warn(`   ⚠️ "Use London time" button not found.`);
+    ctx.warn('"Use London time" button not found -- turn 3 asked about context nothing had set.');
   }
 
   console.log(`   💬 Turn 3: ${tzPrompt}`);
